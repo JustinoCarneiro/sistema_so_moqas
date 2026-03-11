@@ -1,0 +1,26 @@
+<div class="container">
+    <h2>Registar Novo Monitor MoQa</h2>
+    <form [formGroup]="form" (ngSubmit)="salvar()">
+      <div>
+        <label>Zona:</label>
+        <input formControlName="zona" placeholder="Ex: Zona Norte">
+      </div>
+      <div>
+        <label>Latitude:</label>
+        <input type="number" formControlName="latitude" placeholder="-23.xxxx">
+      </div>
+      <div>
+        <label>Longitude:</label>
+        <input type="number" formControlName="longitude" placeholder="-46.xxxx">
+      </div>
+      <div>
+        <label>Bairro:</label>
+        <input formControlName="bairro">
+      </div>
+      <div>
+        <label>Referência:</label>
+        <input formControlName="referencia" placeholder="Ex: Próximo ao posto">
+      </div>
+      <button type="submit" [disabled]="form.invalid">Salvar Dispositivo</button>
+    </form>
+  </div>

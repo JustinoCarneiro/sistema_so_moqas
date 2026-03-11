@@ -1,0 +1,36 @@
+<div class="container">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Monitores MoQa Registrados</h2>
+    <button routerLink="/novo-dispositivo">Novo Monitor</button>
+  </div>
+
+  <table border="1" style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #f4f4f4;">
+        <th>ID</th>
+        <th>Zona</th>
+        <th>Bairro</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let disp of dispositivos">
+        <td>{{ disp.id }}</td>
+        <td>{{ disp.zona }}</td>
+        <td>{{ disp.bairro || '-' }}</td>
+        <td>{{ disp.latitude }}</td>
+        <td>{{ disp.longitude }}</td>
+        <td>
+          <button>Ver Logs</button>
+        </td>
+      </tr>
+      <tr *ngIf="dispositivos.length === 0">
+        <td colspan="6" style="text-align: center; padding: 10px;">
+          Nenhum dispositivo encontrado.
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,7 @@
+/home/marcos/Documents/sistema_so_moqas/moqa-back/src/main/java/com/moqa/system/model/Dispositivo.java
+/home/marcos/Documents/sistema_so_moqas/moqa-back/src/main/java/com/moqa/system/model/LogEvento.java
+/home/marcos/Documents/sistema_so_moqas/moqa-back/src/main/java/com/moqa/system/MoqaApplication.java
+/home/marcos/Documents/sistema_so_moqas/moqa-back/src/main/java/com/moqa/system/repository/LogEventoRepository.java
+/home/marcos/Documents/sistema_so_moqas/moqa-back/src/main/java/com/moqa/system/service/DispositivoService.java
+/home/marcos/Documents/sistema_so_moqas/moqa-back/src/main/java/com/moqa/system/repository/DispositivoRepository.java
+/home/marcos/Documents/sistema_so_moqas/moqa-back/src/main/java/com/moqa/system/controller/DispositivoController.java

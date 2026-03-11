@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "MoqaApplication",
+            "request": "launch",
+            "mainClass": "com.moqa.system.MoqaApplication",
+            "projectName": "moqa-back"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MoqaApplication<moqa-back>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "MoqaApplication",
+            "projectName": "moqa-back",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

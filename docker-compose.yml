@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Banco de Dados (PostgreSQL para produção/dockerizado)
+  db:
+    image: postgres:15-alpine
+    container_name: moqa-db
+    environment:
+      - POSTGRES_DB=moqadb
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5433:5432"
+
+  # Backend Java
+  api:
+    build: ./moqa-back
+    container_name: moqa-api
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/moqadb
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver # Adicione esta linha
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect # E esta
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - db
+
+  # Frontend Angular
+  web:
+    build: ./moqa-front
+    container_name: moqa-web
+    ports:
+      - "80:80"
+    depends_on:
+      - api

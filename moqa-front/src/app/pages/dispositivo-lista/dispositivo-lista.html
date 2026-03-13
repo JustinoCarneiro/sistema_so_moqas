@@ -1,36 +1,39 @@
 <div class="container">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h2>Monitores MoQa Registrados</h2>
-    <button routerLink="/novo-dispositivo">Novo Monitor</button>
+  <div class="header-actions">
+    <h2>Monitores MoQa Registados</h2>
+    <a routerLink="/novo-dispositivo" class="btn-primary">+ Novo Monitor</a>
   </div>
 
-  <table border="1" style="width: 100%; margin-top: 20px; border-collapse: collapse;">
-    <thead>
-      <tr style="background-color: #f4f4f4;">
-        <th>ID</th>
-        <th>Zona</th>
-        <th>Bairro</th>
-        <th>Latitude</th>
-        <th>Longitude</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let disp of dispositivos">
-        <td>{{ disp.id }}</td>
-        <td>{{ disp.zona }}</td>
-        <td>{{ disp.bairro || '-' }}</td>
-        <td>{{ disp.latitude }}</td>
-        <td>{{ disp.longitude }}</td>
-        <td>
-          <button>Ver Logs</button>
-        </td>
-      </tr>
-      <tr *ngIf="dispositivos.length === 0">
-        <td colspan="6" style="text-align: center; padding: 10px;">
-          Nenhum dispositivo encontrado.
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Zona</th>
+          <th>Bairro</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let disp of dispositivos">
+          <td>#{{ disp.id }}</td>
+          <td><strong>{{ disp.zona }}</strong></td>
+          <td>{{ disp.bairro || '-' }}</td>
+          <td>{{ disp.latitude }}</td>
+          <td>{{ disp.longitude }}</td>
+          <td>
+            <button class="btn-action">Ver Logs</button>
+          </td>
+        </tr>
+        
+        <tr *ngIf="dispositivos.length === 0">
+          <td colspan="6" class="empty-state">
+            Nenhum monitor encontrado no banco de dados. Cadastre o primeiro!
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

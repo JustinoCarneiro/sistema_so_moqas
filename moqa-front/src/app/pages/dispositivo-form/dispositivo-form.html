@@ -1,26 +1,44 @@
-<div class="container">
-    <h2>Registar Novo Monitor MoQa</h2>
-    <form [formGroup]="form" (ngSubmit)="salvar()">
-      <div>
-        <label>Zona:</label>
-        <input formControlName="zona" placeholder="Ex: Zona Norte">
-      </div>
-      <div>
-        <label>Latitude:</label>
-        <input type="number" formControlName="latitude" placeholder="-23.xxxx">
-      </div>
-      <div>
-        <label>Longitude:</label>
-        <input type="number" formControlName="longitude" placeholder="-46.xxxx">
-      </div>
-      <div>
-        <label>Bairro:</label>
-        <input formControlName="bairro">
-      </div>
-      <div>
-        <label>Referência:</label>
-        <input formControlName="referencia" placeholder="Ex: Próximo ao posto">
-      </div>
-      <button type="submit" [disabled]="form.invalid">Salvar Dispositivo</button>
-    </form>
+<div class="form-container">
+  <div class="header-actions">
+    <h2>Registar Monitor MoQa</h2>
+    <a routerLink="/dispositivos" class="btn-back">⬅ Voltar</a>
   </div>
+
+  <form [formGroup]="form" (ngSubmit)="salvar()" class="modern-form">
+    <div class="form-group">
+      <label for="zona">Zona <span class="required">*</span></label>
+      <input id="zona" formControlName="zona" type="text" placeholder="Ex: Zona Sul"
+             [ngClass]="{'is-invalid': form.get('zona')?.invalid && form.get('zona')?.touched}">
+      <small class="error-text" *ngIf="form.get('zona')?.invalid && form.get('zona')?.touched">A zona é obrigatória.</small>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="latitude">Latitude <span class="required">*</span></label>
+        <input id="latitude" formControlName="latitude" type="number" step="any" placeholder="-23.xxxx"
+               [ngClass]="{'is-invalid': form.get('latitude')?.invalid && form.get('latitude')?.touched}">
+      </div>
+      <div class="form-group">
+        <label for="longitude">Longitude <span class="required">*</span></label>
+        <input id="longitude" formControlName="longitude" type="number" step="any" placeholder="-46.xxxx"
+               [ngClass]="{'is-invalid': form.get('longitude')?.invalid && form.get('longitude')?.touched}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="bairro">Bairro</label>
+      <input id="bairro" formControlName="bairro" type="text" placeholder="Ex: Centro">
+    </div>
+
+    <div class="form-group">
+      <label for="referencia">Referência</label>
+      <textarea id="referencia" formControlName="referencia" rows="3" placeholder="Ex: Próximo ao posto de combustível"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="form.invalid" class="btn-save">
+        Salvar Monitor
+      </button>
+    </div>
+  </form>
+</div>

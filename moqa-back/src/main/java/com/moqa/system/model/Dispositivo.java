@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.util.List;
 import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "dispositivos")
@@ -31,5 +32,6 @@ public class Dispositivo {
 
     // Relacionamento para acessar os logs a partir do dispositivo
     @OneToMany(mappedBy = "dispositivo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<LogEvento> logs = new ArrayList<>();
 }

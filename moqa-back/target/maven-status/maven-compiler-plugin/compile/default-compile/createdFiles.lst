@@ -1,7 +1,0 @@
-com/moqa/system/repository/LogEventoRepository.class
-com/moqa/system/model/LogEvento.class
-com/moqa/system/MoqaApplication.class
-com/moqa/system/controller/DispositivoController.class
-com/moqa/system/service/DispositivoService.class
-com/moqa/system/model/Dispositivo.class
-com/moqa/system/repository/DispositivoRepository.class

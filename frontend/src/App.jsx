@@ -36,11 +36,24 @@ function App() {
   return (
     <div className="flex h-screen overflow-hidden text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900">
       
+      {/* Botão flutuante para mobile se sidebar fechada */}
+      {!isSidebarOpen && (
+        <button 
+          onClick={() => setSidebarOpen(true)}
+          className="md:hidden fixed top-4 left-4 z-[60] p-2 bg-indigo-600 text-white rounded-lg shadow-lg"
+        >
+          <Menu size={20} />
+        </button>
+      )}
+
       {/* Sidebar Luxo */}
       <motion.aside 
         initial={false}
-        animate={{ width: isSidebarOpen ? 280 : 80 }}
-        className="glass-nav relative flex flex-col z-50 h-screen transition-all duration-300"
+        animate={{ 
+          width: isSidebarOpen ? (window.innerWidth < 768 ? '100vw' : 280) : (window.innerWidth < 768 ? 0 : 80),
+          x: !isSidebarOpen && window.innerWidth < 768 ? -280 : 0
+        }}
+        className={`glass-nav fixed md:relative z-50 h-screen transition-all duration-300 overflow-hidden ${!isSidebarOpen && 'pointer-events-none md:pointer-events-auto'}`}
       >
         <div className="p-6 flex items-center justify-between">
           {isSidebarOpen && (
@@ -110,8 +123,8 @@ function App() {
       </motion.aside>
 
       {/* Main Content Luxo */}
-      <main className="flex-1 overflow-y-auto relative bg-transparent px-4 py-4 md:px-12 md:py-12 custom-scrollbar">
-        <div className="max-w-5xl mx-auto space-y-12">
+      <main className="flex-1 overflow-y-auto relative bg-transparent px-4 py-6 md:px-12 md:py-12 custom-scrollbar">
+        <div className="max-w-5xl mx-auto space-y-8 md:space-y-12">
           
           <AnimatePresence mode="wait">
             <motion.div

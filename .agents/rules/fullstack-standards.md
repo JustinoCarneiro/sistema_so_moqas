@@ -1,5 +1,5 @@
 ---
-trigger: always_on
+trigger: manual
 ---
 
 # Padrões Globais de Desenvolvimento: React.js + Django + PostgreSQL

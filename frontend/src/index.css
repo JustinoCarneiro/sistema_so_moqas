@@ -2,10 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans;
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(210,100%,98%,1) 0, transparent 50%), 
+      radial-gradient(at 50% 0%, hsla(220,100%,97%,1) 0, transparent 50%), 
+      radial-gradient(at 100% 0%, hsla(230,100%,96%,1) 0, transparent 50%);
+    min-height: 100vh;
+  }
+}
+
+.glass-nav {
+  @apply bg-white/80 backdrop-blur-md border-r border-slate-200/50;
+}
+
+.glass-card {
+  @apply bg-white/90 backdrop-blur-sm shadow-xl shadow-slate-200/50 border border-white;
+}
+
+.sidebar-item-active {
+  @apply bg-indigo-600 text-white shadow-lg shadow-indigo-200;
+}
+
+.sidebar-item-hover {
+  @apply hover:bg-slate-100/50 hover:text-indigo-600 transition-all duration-300;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
 }

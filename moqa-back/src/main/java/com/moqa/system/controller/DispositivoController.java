@@ -34,4 +34,22 @@ public class DispositivoController {
             @Valid @RequestBody LogEvento log) {
         return ResponseEntity.ok(dispositivoService.adicionarLog(id, log));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable Long id) {
+        dispositivoService.remover(id);
+        return ResponseEntity.noContent().build(); // Retorna HTTP 204 No Content
+    }
+
+    @GetMapping("/{id}/logs")
+    public ResponseEntity<List<LogEvento>> listarLogs(@PathVariable Long id) {
+        return ResponseEntity.ok(dispositivoService.listarLogs(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Dispositivo> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody Dispositivo dados) {
+        return ResponseEntity.ok(dispositivoService.atualizar(id, dados));
+    }
 }

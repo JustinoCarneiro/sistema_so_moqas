@@ -17,23 +17,126 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let disp of dispositivos">
-          <td>#{{ disp.id }}</td>
-          <td><strong>{{ disp.zona }}</strong></td>
-          <td>{{ disp.bairro || '-' }}</td>
-          <td>{{ disp.latitude }}</td>
-          <td>{{ disp.longitude }}</td>
-          <td>
-            <button class="btn-action">Ver Logs</button>
-          </td>
-        </tr>
-        
-        <tr *ngIf="dispositivos.length === 0">
-          <td colspan="6" class="empty-state">
-            Nenhum monitor encontrado no banco de dados. Cadastre o primeiro!
-          </td>
-        </tr>
+        @for (disp of dispositivos; track disp.id) {
+          <tr>
+            <td>#{{ disp.id }}</td>
+            <td><strong>{{ disp.zona }}</strong></td>
+            <td>{{ disp.bairro || '-' }}</td>
+            <td>{{ disp.latitude }}</td>
+            <td>{{ disp.longitude }}</td>
+            <td>
+              <button class="btn-action" (click)="abrirLogs(disp)">Ver Logs</button>
+              <button class="btn-warning" (click)="abrirEditar(disp)">Editar</button>
+              <button class="btn-danger" (click)="remover(disp.id)">Remover</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-state">
+              Nenhum monitor encontrado. Cadastre o primeiro!
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
 </div>
+
+<!-- Modal de Logs -->
+@if (modalLogsAberto && dispositivoSelecionado) {
+  <div class="modal-overlay" (click)="fecharModalLogs()">
+    <div class="modal" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div>
+          <h3>Logs do Monitor</h3>
+          <span class="modal-sub">Zona {{ dispositivoSelecionado.zona }} — #{{ dispositivoSelecionado.id }}</span>
+        </div>
+        <button class="modal-close" (click)="fecharModalLogs()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        @if (carregandoLogs) {
+          <p class="modal-empty">A carregar logs...</p>
+        } @else if (logs.length === 0) {
+          <p class="modal-empty">Nenhum log registado para este monitor.</p>
+        } @else {
+          @for (log of logs; track log.id) {
+            <div class="log-item">
+              <div class="log-header">
+                <span class="log-data">{{ log.data | date:'dd/MM/yyyy HH:mm' }}</span>
+                <span class="log-local">{{ log.local }}</span>
+              </div>
+              <p class="log-descricao">{{ log.descricao }}</p>
+              @if (log.observacoes) {
+                <p class="log-obs">{{ log.observacoes }}</p>
+              }
+            </div>
+          }
+        }
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Modal de Edição -->
+@if (modalEditarAberto && dispositivoEditando) {
+  <div class="modal-overlay" (click)="fecharModalEditar()">
+    <div class="modal" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div>
+          <h3>Editar Monitor</h3>
+          <span class="modal-sub">#{{ dispositivoEditando.id }}</span>
+        </div>
+        <button class="modal-close" (click)="fecharModalEditar()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="editarForm">
+
+          <div class="form-group">
+            <label>Zona *</label>
+            <input formControlName="zona" type="text" [class.invalid]="editarForm.get('zona')?.invalid && editarForm.get('zona')?.touched" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Latitude *</label>
+              <input formControlName="latitude" type="number" [class.invalid]="editarForm.get('latitude')?.invalid && editarForm.get('latitude')?.touched" />
+            </div>
+            <div class="form-group">
+              <label>Longitude *</label>
+              <input formControlName="longitude" type="number" [class.invalid]="editarForm.get('longitude')?.invalid && editarForm.get('longitude')?.touched" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Bairro</label>
+            <input formControlName="bairro" type="text" />
+          </div>
+
+          <div class="form-group">
+            <label>Referência</label>
+            <input formControlName="referencia" type="text" />
+          </div>
+
+          <div class="form-group">
+            <label>Localizador Google</label>
+            <input formControlName="localizadorGoogle" type="text" />
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" (click)="fecharModalEditar()">Cancelar</button>
+        <button class="btn-primary" (click)="salvarEdicao()" [disabled]="editarForm.invalid || salvando">
+          {{ salvando ? 'A guardar...' : 'Guardar' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

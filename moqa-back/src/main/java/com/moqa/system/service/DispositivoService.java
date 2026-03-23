@@ -34,4 +34,32 @@ public class DispositivoService {
         log.setDispositivo(disp);
         return logEventoRepository.save(log);
     }
+
+    @Transactional
+    public void remover(Long id) {
+        Dispositivo disp = dispositivoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dispositivo com ID " + id + " não encontrado."));
+        dispositivoRepository.delete(disp);
+    }
+
+    public List<LogEvento> listarLogs(Long dispositivoId) {
+        dispositivoRepository.findById(dispositivoId)
+                .orElseThrow(() -> new RuntimeException("Dispositivo não encontrado"));
+        return logEventoRepository.findByDispositivoId(dispositivoId);
+    }
+
+    @Transactional
+    public Dispositivo atualizar(Long id, Dispositivo dados) {
+        Dispositivo disp = dispositivoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dispositivo com ID " + id + " não encontrado."));
+
+        disp.setZona(dados.getZona());
+        disp.setLatitude(dados.getLatitude());
+        disp.setLongitude(dados.getLongitude());
+        disp.setBairro(dados.getBairro());
+        disp.setReferencia(dados.getReferencia());
+        disp.setLocalizadorGoogle(dados.getLocalizadorGoogle());
+
+        return dispositivoRepository.save(disp);
+    }
 }

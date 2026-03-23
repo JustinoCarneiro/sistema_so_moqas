@@ -3,5 +3,8 @@
   "python.analysis.extraPaths": [
     "/home/marcos/Documents/sistema_so_moqas/backend"
   ],
-  "python.languageServer": "Pylance"
+  "python.languageServer": "Jedi",
+  "python.analysis.typeCheckingMode": "off",
+  "pyre.enabled": false,
+  "python.useEnvironmentsExtension": false
 }

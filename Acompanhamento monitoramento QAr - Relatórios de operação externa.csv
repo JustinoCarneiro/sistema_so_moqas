@@ -1,0 +1,39 @@
+,Log de Eventos,,,,
+,Data,Evento,Locais,Descrição,Obs.
+,16/05/23,Instalação,"CITINOVA, Iate clube, Náutico, Pç da lagoinha, Estação, SEUMA (Siqueira)
+",Evento de lançamento,
+,16/06/23,Instalação,MoQAs parte norte,Instalação com modems 4g,
+,26/06/23,Instalação,MoQAs parte sul,Instalação com modems 4g,
+,16/08/23,Instalação/Manutenção,MoQAs parte norte,"Atualização do cod., Subs. de chips
+",
+,22/08/23,Instalação/Manutenção,MoQAs parte sul,"Atualização do cod., Subs. de chips
+",
+,12/09/23,Instalação/Manutenção,MoQAs parte norte,Manutenção parte elétrica,
+,19/09/23,Instalação,MoQAs parte norte,Atualização da parte elétrica,
+,04/10/23,Instalação/Manutenção,MoQAs parte sul,Atualização da parte elétrica,
+,10/11/23,Instalação/Manutenção,MoQAs parte norte,Atualização da parte elétrica,
+,21/11/23,Visita,"Farias Brito , Vila Velha, Siqueira, José Walter, Hospital Sarah",Visita aos APs da MOB,Todos os pontos  ok
+,13/12/23,Instalação,"Farias Brito , Vila Velha, Siqueira, José Walter, Hospital Sarah",Instalação dos MoQAs nos APs da MOB,Pontos em acompanhamento
+,19/1/24,Instalação,"Praça da Lagoinha, SCSP, Praça Portugal, Cais do Porto",Instalação dos MoQAs Chip,Pontos em acompanhamento
+,30/1/24,Instalação,"Igreja de Fátima, Leste Oeste, Beira Mar",Instalação dos MoQAs Chip,Pontos em acompanhamento/ Lançamento de cabo elétrico
+,31/1/24,Instalação,Iate Plaza,Instalação dos MoQAs Chip,Pontos em acompanhamento/ Lançamento de cabo elétrico
+,18/4/24,Instalação/Manutenção,"CITIONOVA, Leste Oeste, Iate Plaza,",Manutenção dos monitores e recarga dos chips,"Foram progamados 5 pontos de manutenção, mas os pontos da baira mar tinha uma equipe da cagece trabalhando e no cais do porto enquanto estávamos lá iniciou-se uma forte chuva e ocorreu só a retirada do monitor"
+,25/4/24,Instalação,"AV. GOVERNADOR RAUL BARBOSA Nº 5112
+RUA SANTA TEREZINHA DO MENINO JESUS E DA SAGRADA Nº 5125 (PRÓXIMO A FACE DE CRISTO)
+AVENIDA GOVERNADOR RAUL BARBOSA N° 623 (Não entrou, pois precisa alterar o nome da rede para Equiparciti)",Instalação,Foram instalados 3 monitores que compõem os 11 que são destinados a monitorar às áreas verdes
+,2/5/24,Instalação,"PARQUE ESTADUAL DO COCO (CALCADAO) - Av. Padre Antônio Tomás, s/n - Cocó
+Av. Governador Raul Barbosa, 900 - São João do Tauape, Fortaleza - CE, 60120-420 / Polo de Lazer Rachel Guimarães
+Av. Washington Soares, 4269 - Cocó",Instalação,Foram instalados 3 monitores que compõem os 11 que são destinados a monitorar às áreas verdes
+,6/6/24,Instalação/Manutenção,Jardim Iracema (Av. Major Assis); Farias Brito (Av. Bezerra de Menezes); CITINOVA; Av. Beira Mar (Náutico),Manutenção dos monitores,No ponto do Jardim Iracema a rede Equiparciti tinha sido removida
+,12/6/24,Instalação/Manutenção,Cais do Porto; Aracapé; Siqueira,Manutenção dos monitores,No ponto do Cais do Porto a rede Equiparciti estava não existente
+,18/6/24,Instalação/Manutenção,Paço Municipal; Aldeota/Praça Portugal; 13 de Maio,Manutenção dos monitores,"No ponto do Paço existia rede, conectava, mas sem internet"
+,4/7/24,Instalação,"CIDADE 2.000, EDSON QUEIROZ/CENTRO DE EVENTOS, EDSON QUEIROZ/IGUATEMI","Instalação dos monitores, áreas verdes",Instalados e Transmitindo
+,23/7/24,Instalação,"MANOEL DIAS BRANCO, CIDADE ECOLÓGICA","Instalação dos monitores, áreas verdes","Apenas foi instalado o do Manoel Dias Branco, mas não sem tramissão de dados devido a problemas com o Monitor (hipótese). O da cidade ecológica não foi instalado, pois não tinha a chave do hack da MOB"
+,24/7/24,Instalação,"MANOEL DIAS BRANCO, CIDADE ECOLÓGICA, PRAÇA PORTUGAL, 13 DE MAIO","Instalação dos monitores, áreas verdes, devolução ","Foi feita a troca do monitor do Manoel Dias Branco (testado em laboratório) e mesmo assim o mesmo não realizou transmissãode dados, problemas com o AP (MOB). Monitor da Cidade Ecológica instalado e transmitindo. Devolução do monitor Praça Portugal, trasmitindo. Devolução do monitor 13 de maio, sem transmissão; problemas com o AP (MOB). "
+,31/7/24,Instalação/Manutenção,"CAIS DO PORTO, MUCURIPE, BEIRA MAR, CITINOVA",Atualização do código do monitor (SuperMoQa V4_5) e movimentação do monitor do mucuripe em função da localização do AP da MOB,"Foram feitas atualizações do código dos monitores referidos. Todos iniciaram a transmissão dos dados após a finalização da atividade, com exceção do Muciripe que apresentou problemas com a rede da mob, mas o reparo já foi solicitado."
+,7/8/24,Instalação/Manutenção,"SCSP, 13 DE MAIO, PÇ DA LAGOINHA, PICI (instalação), JARDIM IRACEMA E LESTE OESTE",Atualização do código do monitor (SuperMoQa V4_5); movimentação do monitor da SCSP em função da localização do AP da MOB; e instalação do monitor do Pici,"Foram feitas atualizações do código dos monitores referidos. Todos iniciaram a transmissão dos dados após a finalização da atividade, com exceção do Jardim Iracema e 13 de Maio que apresentou problemas com a rede da mob, mas o reparo já foi solicitado."
+,22/8/24,Instalação/Manutenção,Parque do Cocó; São João do Tauape; Cocó; Dionísio Torres / Face de Cristo,Atualização do código do monitor (SuperMoQa V4_5),Foram feitas atualizações do código dos monitores referidos. Todos iniciaram a transmissão dos dados após a finalização da atividade.
+,28/8/24,Instalação/Manutenção,Aerolândia/rotatória; Aerolândia/Polo de Lazer; Messejana; Itaperi; Aracapé,"Atualização do código do monitor (SuperMoQa V4_5) [Aerolândia/rotatória; Aerolândia/Polo de Lazer]; Instalação [Messejana, Aracapé]",No ponto  Aerolândia/Polo de Lazer o modem estava desligado; no ponto do Itaperi não foi possível encontrar a caixa da MOB e no Aracapé o captive portal estava ativo. os demais pontos iniciaram a transmissão após a finalização da atividade.
+,21/11/24,Instalação/Manutenção,Farias Brito; Pç da Lagoinha; Pç Portugal; Mucuripe; Cidade 2000; Manoel Dias Branco,"Retirada dos referidos monitores. Vale ressaltar que apenas o da Pç Portugal e o do Mucuripe possuiam sinal de internet, em todos os outros a rede Equiparciti estava desabilitada.",No ponto  Aerolândia/Polo de Lazer o modem estava desligado; no ponto do Itaperi não foi possível encontrar a caixa da MOB e no Aracapé o captive portal estava ativo. os demais pontos iniciaram a transmissão após a finalização da atividade.
+,27/11/24,Instalação/Manutenção,Paço Municipal; 13 de Maio; Cocó; Raul Barbosa (Polo de Lazer); Messejana; Hospital Sarah; José Walter; Siqueira,Instalação do monitor do Paço Municipal e retirada dos outros monitores,Apenas o ponto da Messejana possuía internet. O ponto do Cocó estava com o cabo de energia rompido. Os demais pontos estavam sem internet.
+,8/5/25,Instalação/Manutenção,Siqueira; Itaperi; Passaré; Messejana; Praça Portugal; Farias Brito,Devolução dos monitores que passaram por manutenção.,"Nenhum monitor ficou  comunicando com o banco de dados, pois a internet não estava disponível. O monitor do Itaperi não foi instalado pois faltou a fonte de energia. O monitor do passaré não foi devolvido, pois o monitor apresentou mau funcionamento no conector da fonte."

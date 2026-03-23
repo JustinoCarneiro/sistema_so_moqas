@@ -1,6 +1,8 @@
 from django.db import models
 
 class Device(models.Model):
+    moqa_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    point = models.IntegerField(null=True, blank=True)
     zone = models.CharField(max_length=100)
     latitude = models.FloatField()
     longitude = models.FloatField()
@@ -12,11 +14,13 @@ class Device(models.Model):
         db_table = 'dispositivos'
 
     def __str__(self):
-        return f"Device {self.id} - {self.zone}"
+        return f"Device {self.moqa_id or self.id} - {self.zone}"
 
 class EventLog(models.Model):
-    device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name='logs')
+    device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name='logs', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    event_date = models.DateField(null=True, blank=True)
+    event_type = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=255)
     description = models.TextField()
     observations = models.TextField(blank=True, null=True)
@@ -25,7 +29,8 @@ class EventLog(models.Model):
         db_table = 'logs_eventos'
 
     def __str__(self):
-        return f"Log for Device {self.device_id} at {self.created_at}"
+        return f"Log {self.event_type} at {self.event_date or self.created_at}"
+
 
 class Maintenance(models.Model):
     STATUS_CHOICES = [

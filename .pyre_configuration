@@ -1,0 +1,9 @@
+{
+  "source_directories": [
+    "/home/marcos/Documents/sistema_so_moqas/backend"
+  ],
+  "search_path": [
+    "/home/marcos/Documents/sistema_so_moqas/backend/venv/lib/python3.12/site-packages",
+    "/home/marcos/Documents/sistema_so_moqas/backend"
+  ]
+}

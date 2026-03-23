@@ -1,0 +1,58 @@
+# .geminiignore
+# Define arquivos e pastas que o agente de inteligência artificial (Gemini) deve ignorar ao analisar o projeto.
+# Isso economiza tokens e agiliza as operações.
+
+# Git e controle de versão
+.git/
+
+# Dependências Python (Backend)
+backend/venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Banco de dados (não precisamos analisar dados binários ou locais)
+*.sqlite3
+db.sqlite3
+backend/posgres_data/
+postgres_data/
+
+# Dependências Node.js (Frontend)
+frontend/node_modules/
+node_modules/
+.pnp
+.pnp.js
+
+# Build e compilação do Front
+frontend/dist/
+frontend/dist-ssr/
+frontend/build/
+build/
+dist/
+
+# Logs e arquivos temporários
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+.AppleDouble
+
+# IDEs e editores (configurações locais que não importam para o código)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Variáveis de ambiente sensíveis
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

@@ -1,4 +1,7 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "interactive"
+  "python.defaultInterpreterPath": "/home/marcos/Documents/sistema_so_moqas/backend/venv/bin/python",
+  "python.analysis.extraPaths": [
+    "/home/marcos/Documents/sistema_so_moqas/backend"
+  ],
+  "python.languageServer": "Pylance"
 }

@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Save, X, Wrench, Camera, ImageIcon } from 'lucide-react';
 
 const statusOptions = [
-  { value: 'pending', label: 'Pendente' },
-  { value: 'in_progress', label: 'Em Andamento' },
-  { value: 'completed', label: 'Concluído' },
-  { value: 'canceled', label: 'Cancelado' },
+  { value: 'pending', label: 'PENDENTE' },
+  { value: 'in_progress', label: 'EM ANDAMENTO' },
+  { value: 'completed', label: 'CONCLUÍDO' },
+  { value: 'canceled', label: 'CANCELADO' },
 ];
 
 const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => {
   const isDark = theme === 'dark';
-  const containerClass = `max-w-4xl mx-auto p-8 rounded-xl shadow-sm border font-sans transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'}`;
-  const inputClass = `w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all ${isDark ? 'bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400'}`;
-  const labelClass = `block text-sm font-medium mb-1.5 ${isDark ? 'text-slate-300' : 'text-gray-700'}`;
+  const labelStyle = !isDark ? { color: '#000000', fontWeight: '900' } : {};
+  const inputClass = `w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all ${isDark ? 'bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-white border-gray-300 text-black font-black placeholder-gray-400'}`;
 
   const initialState = {
     device: '',
@@ -52,7 +51,6 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
         status: editingMaintenance.status,
       });
       setPreview(editingMaintenance.photo ? `http://localhost:8000${editingMaintenance.photo}` : null);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setFormData(initialState);
       setPhoto(null);
@@ -82,7 +80,6 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
       ? `http://localhost:8000/api/maintenances/${editingMaintenance.id}/` 
       : 'http://localhost:8000/api/maintenances/';
     
-    // Usando FormData para enviar arquivo
     const dataToSend = new FormData();
     dataToSend.append('device', formData.device);
     dataToSend.append('technician', formData.technician);
@@ -95,20 +92,23 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
     try {
       const response = await fetch(url, {
         method: method,
-        body: dataToSend, // Não envia Content-Type header manual
+        body: dataToSend,
       });
 
       if (!response.ok) throw new Error('Erro ao salvar manutenção.');
 
-      setMsg({ type: 'success', text: editingMaintenance ? 'Ordem de serviço atualizada!' : 'Manutenção registrada com sucesso!' });
+      setMsg({ type: 'success', text: editingMaintenance ? 'OS atualizada com sucesso!' : 'Manutenção registrada com sucesso!' });
       
       if (!editingMaintenance) {
         setFormData(initialState);
         setPhoto(null);
         setPreview(null);
       }
-      if (onSuccess) onSuccess();
-      if (editingMaintenance && onCancel) onCancel();
+
+      // Pequeno delay para o usuário ver a mensagem antes do modal fechar
+      setTimeout(() => {
+        if (onSuccess) onSuccess();
+      }, 3000);
     } catch (err) {
       setMsg({ type: 'error', text: err.message });
     } finally {
@@ -117,23 +117,12 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
   };
 
   return (
-    <div className={containerClass}>
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
-          <Wrench className={editingMaintenance ? "text-amber-500" : "text-blue-600 dark:text-blue-500"} size={26} />
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100">
-            {editingMaintenance ? 'Editar Ordem de Serviço' : 'Registrar Manutenção'}
-          </h2>
-        </div>
-        {editingMaintenance && (
-          <button onClick={onCancel} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-400 dark:text-slate-500 transition-colors">
-            <X size={20} />
-          </button>
-        )}
-      </div>
-
+    <div className="font-sans">
       {msg.text && (
-        <div className={'mb-6 p-4 rounded-lg text-sm border ' + (msg.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/30')}>
+        <div 
+          data-testid="success-alert"
+          className={'mb-4 p-4 rounded-xl text-sm border-2 ' + (msg.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200' : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200')}
+        >
           {msg.text}
         </div>
       )}
@@ -142,8 +131,8 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-6">
             <div>
-              <label className={labelClass}>Monitor / Dispositivo</label>
-              <select name="device" value={formData.device} onChange={handleChange} required className={inputClass}>
+              <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>MONITOR / DISPOSITIVO</label>
+              <select name="device" value={formData.device} onChange={handleChange} required className={inputClass} style={!isDark? {color: '#000000'}:{}}>
                 <option value="" className="dark:bg-slate-800">Selecione um monitor</option>
                 {devices.map((dev) => (
                   <option key={dev.id} value={dev.id} className="dark:bg-slate-800">
@@ -154,15 +143,13 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
             </div>
 
             <div>
-              <label className={labelClass}>Técnico Responsável</label>
-              <input type="text" name="technician" value={formData.technician} onChange={handleChange} required placeholder="Nome do técnico" className={inputClass} />
+              <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>TÉCNICO RESPONSÁVEL</label>
+              <input type="text" name="technician" value={formData.technician} onChange={handleChange} required placeholder="Nome do técnico" className={inputClass} style={!isDark? {color: '#000000'}:{}} />
             </div>
 
-
-
             <div>
-              <label className={labelClass}>Status</label>
-              <select name="status" value={formData.status} onChange={handleChange} className={inputClass}>
+              <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>STATUS</label>
+              <select name="status" value={formData.status} onChange={handleChange} className={inputClass} style={!isDark? {color: '#000000'}:{}}>
                 {statusOptions.map((opt) => (
                   <option key={opt.value} value={opt.value} className="dark:bg-slate-800">{opt.label}</option>
                 ))}
@@ -170,23 +157,22 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
             </div>
           </div>
 
-          {/* Area de Foto */}
           <div className="flex flex-col">
-            <label className={labelClass}>Foto da Manutenção</label>
-            <div className="flex-1 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors cursor-pointer relative overflow-hidden group">
+            <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>FOTO DA MANUTENÇÃO</label>
+            <div className="flex-1 border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-xl flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 transition-all cursor-pointer relative overflow-hidden group">
               {preview ? (
                 <div className="w-full h-full relative">
                   <img src={preview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-                       <Camera size={14} /> Trocar Foto
+                    <p className="text-white text-xs font-black uppercase tracking-wider flex items-center gap-2">
+                       <Camera size={18} /> Trocar Foto
                     </p>
                   </div>
                 </div>
               ) : (
                 <div className="text-center">
-                  <ImageIcon size={32} className="text-gray-300 dark:text-slate-600 mx-auto mb-2" />
-                  <p className="text-xs text-gray-400 dark:text-slate-500 font-bold uppercase tracking-tighter">Clique para anexar foto</p>
+                  <ImageIcon size={32} className="text-gray-400 dark:text-slate-600 mx-auto mb-2" />
+                  <p className="text-xs font-black uppercase tracking-tighter" style={labelStyle}>Clique para anexar foto</p>
                 </div>
               )}
               <input type="file" accept="image/*" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" />
@@ -195,23 +181,27 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
         </div>
 
         <div>
-          <label className={labelClass}>Descrição do Serviço</label>
-          <textarea name="description" value={formData.description} onChange={handleChange} required rows={3} placeholder="Descreva o defeito e as peças trocadas..." className={inputClass} />
+          <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>DESCRIÇÃO DO SERVIÇO</label>
+          <textarea name="description" value={formData.description} onChange={handleChange} required rows={3} placeholder="Descreva o defeito..." className={inputClass} style={!isDark? {color: '#000000'}:{}} />
         </div>
 
-        <div className="pt-4 flex justify-end gap-3">
-          {editingMaintenance && (
-            <button type="button" onClick={onCancel} className="px-6 py-2.5 rounded-lg font-bold text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
-              Cancelar
-            </button>
-          )}
+        <div className="pt-6 flex justify-end gap-3 border-t-2 border-gray-100 dark:border-slate-800">
+          <button 
+            type="button" 
+            onClick={onCancel} 
+            className={`px-8 py-3 rounded-xl transition-all shadow-sm ${isDark ? 'text-slate-400 hover:bg-slate-800' : 'text-black hover:bg-gray-100 border-2 border-gray-200'}`}
+            style={!isDark ? { fontWeight: '900' } : {}}
+          >
+            CANCELAR
+          </button>
           <button
             type="submit"
             disabled={loading}
-            className={"px-8 py-2.5 rounded-lg text-white font-bold transition-all shadow-md active:scale-95 disabled:opacity-50 flex items-center gap-2 " + (editingMaintenance ? "bg-amber-500 hover:bg-amber-600" : "bg-blue-600 hover:bg-blue-700")}
+            className={"px-10 py-3 rounded-xl text-white transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2 " + (editingMaintenance ? "bg-amber-600 hover:bg-amber-700" : "bg-indigo-600 hover:bg-indigo-700")}
+            style={{ fontWeight: '900' }}
           >
             <Save size={18} />
-            {loading ? 'Salvando...' : (editingMaintenance ? 'Atualizar Ordem' : 'Salvar Manutenção')}
+            {loading ? 'SALVANDO...' : (editingMaintenance ? 'ATUALIZAR ORDEM' : 'SALVAR MANUTENÇÃO')}
           </button>
         </div>
       </form>

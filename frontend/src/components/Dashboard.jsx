@@ -42,17 +42,17 @@ const Dashboard = ({ theme }) => {
   if (loading) return <div className="text-center py-12 text-gray-500 font-medium">Analisando dados...</div>;
 
   const isDark = theme === 'dark';
-  const cardStyle = `p-6 rounded-xl border flex items-center justify-between transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800 shadow-none' : 'bg-white border-gray-100 shadow-sm'}`;
-  const sectionStyle = `p-8 rounded-xl border transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100 shadow-sm'}`;
-  const subCardStyle = `p-4 rounded-lg border transition-all duration-300`;
+  const cardStyle = `p-6 rounded-xl border-2 flex items-center justify-between transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800 shadow-none' : 'bg-white border-slate-200 shadow-xl shadow-slate-100'}`;
+  const sectionStyle = `p-8 rounded-xl border-2 transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-lg'}`;
+  const subCardStyle = `p-4 rounded-lg border-2 transition-all duration-300`;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex items-center gap-3">
-        <div className={`p-2 rounded-lg shadow-md transition-all ${isDark ? 'bg-indigo-600 text-white shadow-none' : 'bg-indigo-600 text-white shadow-indigo-200'}`}>
+        <div className={`p-2.5 rounded-xl shadow-lg transition-all ${isDark ? 'bg-indigo-600 text-white shadow-none' : 'bg-indigo-600 text-white shadow-indigo-200'}`}>
           <LayoutDashboard size={24} />
         </div>
-        <h2 className={`text-2xl font-bold ${isDark ? 'text-slate-100' : 'text-gray-800'}`}>Painel Geral</h2>
+        <h2 className={`text-2xl font-black uppercase tracking-tight ${isDark ? 'text-slate-100' : 'text-black'}`}>Painel Geral</h2>
       </div>
 
       {/* Stats Grid */}
@@ -95,17 +95,17 @@ const Dashboard = ({ theme }) => {
           Progresso das Manutenções
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className={`${subCardStyle} ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-gray-50 border-gray-100'}`}>
-            <span className={`text-xs font-bold block mb-1 ${isDark ? 'text-slate-500' : 'text-gray-400'}`}>AGUARDANDO</span>
-            <span className={`text-xl font-black ${isDark ? 'text-slate-300' : 'text-gray-700'}`}>{stats.pending}</span>
+          <div className={`${subCardStyle} ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-slate-300'}`}>
+            <span className={`text-xs font-black block mb-1 ${isDark ? 'text-slate-500' : 'text-slate-600'}`}>AGUARDANDO</span>
+            <span className={`text-3xl font-black ${isDark ? 'text-slate-300' : 'text-black'}`}>{stats.pending}</span>
           </div>
-          <div className={`${subCardStyle} ${isDark ? 'bg-blue-900/20 border-blue-900/30' : 'bg-blue-50 border-blue-100'}`}>
-            <span className={`text-xs font-bold block mb-1 ${isDark ? 'text-blue-50' : 'text-blue-400'}`}>EM ANDAMENTO</span>
-            <span className={`text-xl font-black ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>{stats.in_progress}</span>
+          <div className={`${subCardStyle} ${isDark ? 'bg-blue-900/20 border-blue-900/30' : 'bg-blue-50 border-blue-300'}`}>
+            <span className={`text-xs font-black block mb-1 ${isDark ? 'text-blue-50' : 'text-blue-700'}`}>EM ANDAMENTO</span>
+            <span className={`text-3xl font-black ${isDark ? 'text-blue-300' : 'text-blue-900'}`}>{stats.in_progress}</span>
           </div>
-          <div className={`${subCardStyle} ${isDark ? 'bg-green-900/20 border-green-900/30' : 'bg-green-50 border-green-100'}`}>
-            <span className={`text-xs font-bold block mb-1 ${isDark ? 'text-green-500' : 'text-green-400'}`}>CONCLUÍDOS</span>
-            <span className={`text-xl font-black ${isDark ? 'text-green-300' : 'text-green-700'}`}>{stats.completed}</span>
+          <div className={`${subCardStyle} ${isDark ? 'bg-green-900/20 border-green-900/30' : 'bg-green-50 border-green-300'}`}>
+            <span className={`text-xs font-black block mb-1 ${isDark ? 'text-green-500' : 'text-green-800'}`}>CONCLUÍDOS</span>
+            <span className={`text-3xl font-black ${isDark ? 'text-green-300' : 'text-green-900'}`}>{stats.completed}</span>
           </div>
         </div>
       </div>

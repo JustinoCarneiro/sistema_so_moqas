@@ -7,6 +7,8 @@ import MaintenanceForm from './components/MaintenanceForm';
 import MaintenanceList from './components/MaintenanceList';
 import Dashboard from './components/Dashboard';
 import Settings from './components/Settings';
+import Modal from './components/Modal';
+import { Plus } from 'lucide-react';
 
 const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
@@ -22,6 +24,8 @@ function App() {
   const [editingMaintenance, setEditingMaintenance] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [isDeviceModalOpen, setIsDeviceModalOpen] = useState(false);
+  const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -41,6 +45,8 @@ function App() {
   const resetEditing = () => {
     setEditingDevice(null);
     setEditingMaintenance(null);
+    setIsDeviceModalOpen(false);
+    setIsMaintenanceModalOpen(false);
   };
 
   const handleTabChange = (id) => {
@@ -49,7 +55,7 @@ function App() {
   };
 
   return (
-    <div className={`flex h-screen overflow-hidden text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
+    <div className={`flex h-screen overflow-hidden text-black dark:text-slate-100 font-sans transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
       
       {/* Botão flutuante para mobile se sidebar fechada */}
       {!isSidebarOpen && (
@@ -77,7 +83,9 @@ function App() {
                animate={{ opacity: 1 }}
                className="flex items-center gap-2"
             >
-              <h1 className="text-xl font-black tracking-tight bg-gradient-to-r from-slate-900 to-slate-500 dark:from-white dark:to-slate-400 bg-clip-text text-transparent uppercase">MoQa OS</h1>
+              <h1 className="text-xl font-black tracking-tight bg-gradient-to-r from-slate-900 to-slate-500 dark:from-white dark:to-slate-400 bg-clip-text text-transparent uppercase">
+                MoQa OS
+              </h1>
             </motion.div>
           )}
           <div className="flex items-center gap-1 ml-auto">
@@ -90,6 +98,8 @@ function App() {
             </button>
             <button 
               onClick={() => setSidebarOpen(!isSidebarOpen)}
+              aria-label="toggle-sidebar"
+              data-testid="sidebar-toggle"
               className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-indigo-600 transition-all"
             >
               {isSidebarOpen ? <Menu size={20} /> : <ChevronRight size={20} />}
@@ -105,6 +115,7 @@ function App() {
               <button
                 key={item.id}
                 onClick={() => handleTabChange(item.id)}
+                data-testid={`nav-${item.id}`}
                 className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 group
                   ${isActive ? 'sidebar-item-active' : 'sidebar-item-hover text-slate-500'}
                 `}
@@ -159,16 +170,74 @@ function App() {
               {activeTab === 'dashboard' && <Dashboard theme={theme} />}
 
               {activeTab === 'devices' && (
-                <div className="grid grid-cols-1 gap-8">
-                  <DeviceForm onSuccess={handleRefresh} editingDevice={editingDevice} onCancel={resetEditing} theme={theme} />
-                  <DeviceList refreshKey={refreshKey} onEdit={(dev) => { setEditingDevice(dev); window.scrollTo({ top: 0, behavior: 'smooth' }); }} theme={theme} />
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <h2 className={`text-2xl font-black tracking-tight ${theme === 'light' ? 'text-black' : 'text-slate-100'}`}>Gerenciar Monitores</h2>
+                    <button 
+                      onClick={() => setIsDeviceModalOpen(true)}
+                      data-testid="new-device-btn"
+                      className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg active:scale-95"
+                    >
+                      <Plus size={18} /> Novo Monitor
+                    </button>
+                  </div>
+                  <DeviceList 
+                    refreshKey={refreshKey} 
+                    onEdit={(dev) => { 
+                      setEditingDevice(dev); 
+                      setIsDeviceModalOpen(true);
+                    }} 
+                    theme={theme} 
+                  />
+                  <Modal 
+                    isOpen={isDeviceModalOpen} 
+                    onClose={resetEditing} 
+                    title={editingDevice ? "Editar Monitor" : "Cadastrar Novo Monitor"}
+                    theme={theme}
+                  >
+                    <DeviceForm 
+                      onSuccess={() => { handleRefresh(); resetEditing(); }} 
+                      editingDevice={editingDevice} 
+                      onCancel={resetEditing} 
+                      theme={theme} 
+                    />
+                  </Modal>
                 </div>
               )}
 
               {activeTab === 'maintenance' && (
-                <div className="grid grid-cols-1 gap-8">
-                  <MaintenanceForm onSuccess={handleRefresh} editingMaintenance={editingMaintenance} onCancel={resetEditing} theme={theme} />
-                  <MaintenanceList refreshKey={refreshKey} onEdit={(m) => { setEditingMaintenance(m); window.scrollTo({ top: 0, behavior: 'smooth' }); }} theme={theme} />
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <h2 className={`text-2xl font-black tracking-tight ${theme === 'light' ? 'text-black' : 'text-slate-100'}`}>Ordens de Serviço</h2>
+                    <button 
+                      onClick={() => setIsMaintenanceModalOpen(true)}
+                      data-testid="new-maint-btn"
+                      className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold transition-all shadow-lg active:scale-95"
+                    >
+                      <Plus size={18} /> Nova Manutenção
+                    </button>
+                  </div>
+                  <MaintenanceList 
+                    refreshKey={refreshKey} 
+                    onEdit={(m) => { 
+                      setEditingMaintenance(m); 
+                      setIsMaintenanceModalOpen(true);
+                    }} 
+                    theme={theme} 
+                  />
+                  <Modal 
+                    isOpen={isMaintenanceModalOpen} 
+                    onClose={resetEditing} 
+                    title={editingMaintenance ? "Editar Ordem de Serviço" : "Nova Manutenção"}
+                    theme={theme}
+                  >
+                    <MaintenanceForm 
+                      onSuccess={() => { handleRefresh(); resetEditing(); }} 
+                      editingMaintenance={editingMaintenance} 
+                      onCancel={resetEditing} 
+                      theme={theme} 
+                    />
+                  </Modal>
                 </div>
               )}
 

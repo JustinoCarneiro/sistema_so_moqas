@@ -125,9 +125,9 @@ const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
   if (loading) return <div className="flex justify-center items-center py-12 text-gray-500 dark:text-slate-400 font-medium font-sans italic">Carregando histórico...</div>;
 
   const isDark = theme === 'dark';
-  const filterContainerClass = `p-4 rounded-xl shadow-sm border grid grid-cols-1 md:grid-cols-3 gap-4 items-end animate-in fade-in duration-300 transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'}`;
-  const listContainerClass = `rounded-xl shadow-sm border overflow-hidden transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'}`;
-  const inputClass = `w-full px-3 py-2 border rounded-lg text-sm transition-all focus:ring-2 focus:ring-blue-500 outline-none ${isDark ? 'bg-slate-800 border-slate-700 text-slate-300' : 'bg-white border-gray-200 text-gray-600'}`;
+  const filterContainerClass = `p-5 rounded-xl border-2 shadow-xl shadow-slate-200/50 grid grid-cols-1 md:grid-cols-3 gap-4 items-end animate-in fade-in duration-300 transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-300'}`;
+  const listContainerClass = `rounded-xl border-2 shadow-2xl shadow-slate-200/60 overflow-hidden transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-300'}`;
+  const inputClass = `w-full px-4 py-2 border-2 rounded-xl text-sm transition-all focus:ring-2 focus:ring-blue-500 outline-none ${isDark ? 'bg-slate-800 border-slate-700 text-slate-300' : 'bg-white border-gray-300 text-black font-bold'}`;
 
   return (
     <div className="max-w-4xl mx-auto space-y-4 font-sans">
@@ -179,9 +179,9 @@ const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
             <div className={`p-2 rounded-lg ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
               <Filter size={20} className={isDark ? 'text-slate-300' : 'text-slate-700'} />
             </div>
-            <h2 className="text-xl font-bold text-gray-800 dark:text-slate-100">
+            <h2 className={`text-xl font-black uppercase tracking-tight ${isDark ? 'text-slate-100' : 'text-black'}`}>
               Histórico {filteredMaints.length < maintenances.length ? 'Filtrado' : ''} 
-              <span className="text-gray-400 dark:text-slate-500 text-sm ml-2 font-normal">({filteredMaints.length} registros)</span>
+              <span className={`text-sm ml-2 font-bold ${isDark ? 'text-slate-500' : 'text-slate-600'}`}>({filteredMaints.length} registros)</span>
             </h2>
           </div>
         </div>
@@ -217,17 +217,17 @@ const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
                         </span>
                       </div>
                       <p className="text-gray-600 dark:text-slate-400 text-sm mb-3 leading-relaxed line-clamp-2">{m.description}</p>
-                      <div className={`flex flex-wrap gap-2 text-xs font-bold uppercase tracking-tight ${isDark ? 'text-slate-500' : 'text-gray-500'}`}>
-                        <span className={`px-2 py-1 rounded-md border ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-gray-100 border-gray-200'}`}>TÉCNICO: {m.technician}</span>
-                        <span className={`px-2 py-1 rounded-md border ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-gray-100 border-gray-200'}`}>{new Date(m.created_at).toLocaleDateString('pt-BR')}</span>
+                      <div className={`flex flex-wrap gap-2 text-xs font-black uppercase tracking-tighter ${isDark ? 'text-slate-500' : 'text-slate-900'}`}>
+                        <span className={`px-2 py-1 rounded-md border-2 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-300'}`}>TÉCNICO: {m.technician}</span>
+                        <span className={`px-2 py-1 rounded-md border-2 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-300'}`}>{new Date(m.created_at).toLocaleDateString('pt-BR')}</span>
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <button onClick={() => onEdit(m)} className={`p-2 border rounded-lg transition-all shadow-sm ${isDark ? 'bg-slate-900 border-slate-700 text-slate-500 hover:text-amber-400 hover:bg-amber-900/20 hover:border-amber-900/30' : 'bg-white border-gray-200 text-gray-400 hover:text-amber-500 hover:bg-amber-50 hover:border-amber-200'}`}>
+                      <button onClick={() => onEdit(m)} data-testid="edit-maint-btn" className={`p-2 border rounded-lg transition-all shadow-sm ${isDark ? 'bg-slate-900 border-slate-700 text-slate-500 hover:text-amber-400 hover:bg-amber-900/20 hover:border-amber-900/30' : 'bg-white border-gray-200 text-gray-400 hover:text-amber-500 hover:bg-amber-50 hover:border-amber-200'}`}>
                         <Edit3 size={16} />
                       </button>
-                      <button onClick={() => handleDelete(m.id)} className={`p-2 border rounded-lg transition-all shadow-sm ${isDark ? 'bg-slate-900 border-slate-700 text-slate-500 hover:text-red-400 hover:bg-red-900/20 hover:border-red-900/30' : 'bg-white border-gray-200 text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-200'}`}>
+                      <button onClick={() => handleDelete(m.id)} data-testid="delete-maint-btn" className={`p-2 border rounded-lg transition-all shadow-sm ${isDark ? 'bg-slate-900 border-slate-700 text-slate-500 hover:text-red-400 hover:bg-red-900/20 hover:border-red-900/30' : 'bg-white border-gray-200 text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-200'}`}>
                         <Trash2 size={16} />
                       </button>
                     </div>

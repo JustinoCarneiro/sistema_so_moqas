@@ -4,26 +4,43 @@ describe('MoQa OS - Testes de Navegação e UX', () => {
       cy.visit('/');
     });
   
-    it('deve carregar o Dashboard e mostrar o título premium', () => {
-      cy.contains('PAINEL GERAL', { matchCase: false }).should('be.visible');
-      cy.contains('MoQa OS', { matchCase: false }).should('be.visible');
+    it('deve carregar o Dashboard e mostrar o título MoQa OS', () => {
+      cy.get('aside').contains('MoQa OS', { matchCase: false }).should('be.visible');
     });
   
     it('deve alternar entre as abas da Sidebar', () => {
-      // Clica em Monitoramento
-      cy.contains(/monitoramento/i).click();
-      cy.contains(/novo monitor/i).should('be.visible'); // Termo correto do DeviceForm.jsx
+      cy.get('[data-testid="nav-devices"]').click();
+      cy.get('[data-testid="new-device-btn"]').should('be.visible');
   
-      // Clica em Operacional
-      cy.contains(/operacional/i).click();
-      cy.contains(/registrar manutenção/i).should('be.visible'); // Termo do MaintenanceForm.jsx
+      cy.get('[data-testid="nav-maintenance"]').click();
+      cy.get('[data-testid="new-maint-btn"]').should('be.visible');
     });
   
     it('deve permitir fechar e abrir a Sidebar', () => {
-      cy.contains(/dashboard/i).should('be.visible');
-      cy.get('aside button').first().click();
-      cy.contains(/dashboard/i).should('not.exist');
-      cy.get('aside button').first().click();
-      cy.contains(/dashboard/i).should('be.visible');
+      // Verifica se o texto "Dashboard" existe inicialmente (dentro do span)
+      cy.get('[data-testid="nav-dashboard"]').contains('Dashboard').should('be.visible');
+      
+      // Fecha
+      cy.get('[data-testid="sidebar-toggle"]').click();
+      
+      // Quando fechada, o span ({isSidebarOpen && <span>}) some do DOM.
+      // O botão (data-testid) continua lá, mas sem o texto "Dashboard".
+      cy.get('[data-testid="nav-dashboard"]').should('not.contain', 'Dashboard');
+      
+      // Abre
+      cy.get('[data-testid="sidebar-toggle"]').click();
+      cy.get('[data-testid="nav-dashboard"]').contains('Dashboard').should('be.visible');
+    });
+
+    it('deve mostrar tabela no desktop e cards no mobile', () => {
+      cy.get('[data-testid="nav-devices"]').click();
+      
+      // Desktop
+      cy.get('table').should('be.visible');
+
+      // Mobile
+      cy.viewport('iphone-xr');
+      cy.get('table').should('not.be.visible');
+      cy.get('.md\\:hidden').should('be.visible');
     });
   });

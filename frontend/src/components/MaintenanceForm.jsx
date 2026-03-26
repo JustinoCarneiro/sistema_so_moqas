@@ -8,10 +8,12 @@ const statusOptions = [
   { value: 'canceled', label: 'Cancelado' },
 ];
 
-const inputClass = "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white text-gray-800 transition-all";
-const labelClass = "block text-sm font-medium text-gray-700 mb-1.5";
+const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => {
+  const isDark = theme === 'dark';
+  const containerClass = `max-w-4xl mx-auto p-8 rounded-xl shadow-sm border font-sans transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'}`;
+  const inputClass = `w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all ${isDark ? 'bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-white border-gray-300 text-gray-800 placeholder-gray-400'}`;
+  const labelClass = `block text-sm font-medium mb-1.5 ${isDark ? 'text-slate-300' : 'text-gray-700'}`;
 
-const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel }) => {
   const initialState = {
     device: '',
     technician: '',
@@ -115,23 +117,23 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-sm border border-gray-100 font-sans">
+    <div className={containerClass}>
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
-          <Wrench className={editingMaintenance ? "text-amber-500" : "text-blue-600"} size={26} />
-          <h2 className="text-2xl font-bold text-gray-800">
+          <Wrench className={editingMaintenance ? "text-amber-500" : "text-blue-600 dark:text-blue-500"} size={26} />
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100">
             {editingMaintenance ? 'Editar Ordem de Serviço' : 'Registrar Manutenção'}
           </h2>
         </div>
         {editingMaintenance && (
-          <button onClick={onCancel} className="p-2 hover:bg-gray-100 rounded-full text-gray-400 transition-colors">
+          <button onClick={onCancel} className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full text-gray-400 dark:text-slate-500 transition-colors">
             <X size={20} />
           </button>
         )}
       </div>
 
       {msg.text && (
-        <div className={'mb-6 p-4 rounded-lg text-sm border ' + (msg.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200')}>
+        <div className={'mb-6 p-4 rounded-lg text-sm border ' + (msg.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/30')}>
           {msg.text}
         </div>
       )}
@@ -142,9 +144,9 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel }) => {
             <div>
               <label className={labelClass}>Monitor / Dispositivo</label>
               <select name="device" value={formData.device} onChange={handleChange} required className={inputClass}>
-                <option value="">Selecione um monitor</option>
+                <option value="" className="dark:bg-slate-800">Selecione um monitor</option>
                 {devices.map((dev) => (
-                  <option key={dev.id} value={dev.id}>
+                  <option key={dev.id} value={dev.id} className="dark:bg-slate-800">
                     Monitor {dev.id} — {dev.zone}
                   </option>
                 ))}
@@ -162,7 +164,7 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel }) => {
               <label className={labelClass}>Status</label>
               <select name="status" value={formData.status} onChange={handleChange} className={inputClass}>
                 {statusOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <option key={opt.value} value={opt.value} className="dark:bg-slate-800">{opt.label}</option>
                 ))}
               </select>
             </div>
@@ -171,7 +173,7 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel }) => {
           {/* Area de Foto */}
           <div className="flex flex-col">
             <label className={labelClass}>Foto da Manutenção</label>
-            <div className="flex-1 border-2 border-dashed border-gray-200 rounded-xl flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative overflow-hidden group">
+            <div className="flex-1 border-2 border-dashed border-gray-200 dark:border-slate-700 rounded-xl flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors cursor-pointer relative overflow-hidden group">
               {preview ? (
                 <div className="w-full h-full relative">
                   <img src={preview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
@@ -183,8 +185,8 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel }) => {
                 </div>
               ) : (
                 <div className="text-center">
-                  <ImageIcon size={32} className="text-gray-300 mx-auto mb-2" />
-                  <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter">Clique para anexar foto</p>
+                  <ImageIcon size={32} className="text-gray-300 dark:text-slate-600 mx-auto mb-2" />
+                  <p className="text-xs text-gray-400 dark:text-slate-500 font-bold uppercase tracking-tighter">Clique para anexar foto</p>
                 </div>
               )}
               <input type="file" accept="image/*" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" />
@@ -199,7 +201,7 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel }) => {
 
         <div className="pt-4 flex justify-end gap-3">
           {editingMaintenance && (
-            <button type="button" onClick={onCancel} className="px-6 py-2.5 rounded-lg font-bold text-gray-500 hover:bg-gray-50 transition-colors">
+            <button type="button" onClick={onCancel} className="px-6 py-2.5 rounded-lg font-bold text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors">
               Cancelar
             </button>
           )}

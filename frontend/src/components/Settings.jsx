@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { Settings as IconSettings, Database, Trash2, AlertTriangle, CheckCircle } from 'lucide-react';
 
-const Settings = () => {
+const Settings = ({ theme }) => {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState({ type: '', text: '' });
+
+  const isDark = theme === 'dark';
+  const cardClass = `p-6 rounded-xl border shadow-sm flex flex-col h-full transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'}`;
+  const infoCardClass = `p-6 rounded-xl border shadow-sm transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'}`;
 
   const clearDatabase = async () => {
     if (!window.confirm('CUIDADO! Isso apagará TODOS os registros de manutenções e monitores do banco de dados. Esta ação é irreversível. Deseja prosseguir?')) {
@@ -32,23 +36,23 @@ const Settings = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in slide-in-from-bottom-4 duration-500 font-sans">
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-slate-800 text-white rounded-lg"><IconSettings size={24} /></div>
-        <h2 className="text-2xl font-bold text-gray-800">Configurações do Sistema</h2>
+        <div className="p-2 bg-indigo-600 text-white rounded-lg shadow-md shadow-indigo-200 dark:shadow-none transition-all"><IconSettings size={24} /></div>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100">Configurações do Sistema</h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Card: Base de Dados */}
-        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col h-full">
-          <div className="flex items-center gap-2 mb-4 text-gray-800 font-bold">
-            <Database size={20} className="text-slate-400" />
+        <div className={cardClass}>
+          <div className="flex items-center gap-2 mb-4 text-gray-800 dark:text-slate-100 font-bold">
+            <Database size={20} className="text-slate-400 dark:text-slate-500" />
             <h3>Repositório de Dados</h3>
           </div>
-          <p className="text-sm text-gray-500 mb-6 flex-grow">Gerencie o armazenamento local do sistema MoQa. Atualmente conectado ao banco PostgreSQL no Docker.</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400 mb-6 flex-grow">Gerencie o armazenamento local do sistema MoQa. Atualmente conectado ao banco PostgreSQL no Docker.</p>
           
           <button 
             onClick={clearDatabase}
             disabled={loading}
-            className="flex items-center gap-2 bg-red-50 text-red-600 border border-red-100 px-4 py-3 rounded-lg text-xs font-bold hover:bg-red-600 hover:text-white hover:border-red-600 transition-all w-full justify-center disabled:opacity-50"
+            className="flex items-center gap-2 bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-500 border border-red-100 dark:border-red-900/30 px-4 py-3 rounded-lg text-xs font-bold hover:bg-red-600 dark:hover:bg-red-600 hover:text-white dark:hover:text-white hover:border-red-600 transition-all w-full justify-center disabled:opacity-50"
           >
             <Trash2 size={16} />
             LIMPAR TODO O BANCO DE DADOS
@@ -56,34 +60,34 @@ const Settings = () => {
         </div>
 
         {/* Card: Setores/Zonas */}
-        <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-          <div className="flex items-center gap-2 mb-4 text-gray-800 font-bold">
-            <AlertTriangle size={20} className="text-slate-400" />
+        <div className={infoCardClass}>
+          <div className="flex items-center gap-2 mb-4 text-gray-800 dark:text-slate-100 font-bold">
+            <AlertTriangle size={20} className="text-slate-400 dark:text-slate-500" />
             <h3>Informações da Unidade</h3>
           </div>
           <div className="space-y-6">
              <div>
-               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Versão do Sistema</label>
-               <p className="text-sm font-bold text-gray-700">MoQa OS v2.1.0-beta</p>
+               <label className="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest block mb-1">Versão do Sistema</label>
+               <p className="text-sm font-bold text-gray-700 dark:text-slate-300">MoQa OS v2.1.0-beta</p>
              </div>
              <div>
-               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Ambiente de Execução</label>
+               <label className="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest block mb-1">Ambiente de Execução</label>
                <div className="flex items-center gap-2">
-                 <span className="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-black rounded-full border border-green-200 uppercase tracking-tighter">
+                 <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 text-[10px] font-black rounded-full border border-green-200 dark:border-green-900/30 uppercase tracking-tighter">
                    PRODUÇÃO LOCAL
                  </span>
                </div>
              </div>
              <div>
-               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Status do Middleware</label>
-               <p className="text-xs text-gray-500 font-medium">Conectado via Django REST Framework (DRF)</p>
+               <label className="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest block mb-1">Status do Middleware</label>
+               <p className="text-xs text-gray-500 dark:text-slate-400 font-medium">Conectado via Django REST Framework (DRF)</p>
              </div>
           </div>
         </div>
       </div>
 
       {msg.text && (
-        <div className={`p-4 rounded-xl flex items-start gap-4 border shadow-sm animate-in fade-in zoom-in duration-300 ${msg.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
+        <div className={`p-4 rounded-xl flex items-start gap-4 border shadow-sm animate-in fade-in zoom-in duration-300 ${msg.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30' : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-900/30'}`}>
            <CheckCircle size={20} className="mt-0.5" />
            <div>
              <p className="text-sm font-bold">Ação Completa</p>

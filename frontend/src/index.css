@@ -3,26 +3,41 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-slate-50 text-slate-900 font-sans;
-    background-image: 
+  :root {
+    --bg-gradient: 
       radial-gradient(at 0% 0%, hsla(210,100%,98%,1) 0, transparent 50%), 
       radial-gradient(at 50% 0%, hsla(220,100%,97%,1) 0, transparent 50%), 
       radial-gradient(at 100% 0%, hsla(230,100%,96%,1) 0, transparent 50%);
+  }
+
+  html.dark, .dark {
+    --bg-gradient: 
+      radial-gradient(at 0% 0%, hsla(220,40%,10%,1) 0, transparent 50%), 
+      radial-gradient(at 50% 0%, hsla(230,40%,8%,1) 0, transparent 50%), 
+      radial-gradient(at 100% 0%, hsla(240,40%,12%,1) 0, transparent 50%);
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans transition-colors duration-500;
+    background-image: var(--bg-gradient) !important;
     min-height: 100vh;
+  }
+
+  .dark body {
+    @apply bg-slate-950 text-slate-100;
   }
 }
 
 .glass-nav {
-  @apply bg-white/80 backdrop-blur-md border-r border-slate-200/50;
+  @apply bg-white/80 backdrop-blur-md border-r border-slate-200/50 dark:bg-slate-900/80 dark:border-slate-800/50;
 }
 
 .glass-card {
-  @apply bg-white/90 backdrop-blur-sm shadow-xl shadow-slate-200/50 border border-white;
+  @apply bg-white/90 backdrop-blur-sm shadow-xl shadow-slate-200/50 border border-white dark:bg-slate-900/90 dark:shadow-none dark:border-slate-800;
 }
 
 .sidebar-item-active {
-  @apply bg-indigo-600 text-white shadow-lg shadow-indigo-200;
+  @apply bg-indigo-600 text-white shadow-lg shadow-indigo-200 dark:shadow-indigo-900/20;
 }
 
 .sidebar-item-hover {
@@ -37,5 +52,5 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
+  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors dark:bg-slate-800 dark:hover:bg-slate-700;
 }

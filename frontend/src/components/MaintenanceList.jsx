@@ -6,27 +6,27 @@ import 'jspdf-autotable';
 const statusMap = {
   completed: {
     label: 'Concluído',
-    className: 'text-green-700 bg-green-100',
+    className: 'text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/20',
     Icon: CheckCircle2,
   },
   in_progress: {
     label: 'Em Andamento',
-    className: 'text-blue-700 bg-blue-100',
+    className: 'text-blue-700 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/20',
     Icon: Wrench,
   },
   canceled: {
     label: 'Cancelado',
-    className: 'text-red-700 bg-red-100',
+    className: 'text-red-700 bg-red-100 dark:text-red-500 dark:bg-red-900/20',
     Icon: XCircle,
   },
   pending: {
     label: 'Pendente',
-    className: 'text-yellow-700 bg-yellow-100',
+    className: 'text-yellow-700 bg-yellow-100 dark:text-yellow-500 dark:bg-yellow-900/20',
     Icon: Clock,
   },
 };
 
-const MaintenanceList = ({ refreshKey, onEdit }) => {
+const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
   const [maintenances, setMaintenances] = useState([]);
   const [filteredMaints, setFilteredMaints] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -122,45 +122,50 @@ const MaintenanceList = ({ refreshKey, onEdit }) => {
     doc.save('relatorio-filtrado-moqa.pdf');
   };
 
-  if (loading) return <div className="flex justify-center items-center py-12 text-gray-500 font-medium font-sans italic">Carregando histórico...</div>;
+  if (loading) return <div className="flex justify-center items-center py-12 text-gray-500 dark:text-slate-400 font-medium font-sans italic">Carregando histórico...</div>;
+
+  const isDark = theme === 'dark';
+  const filterContainerClass = `p-4 rounded-xl shadow-sm border grid grid-cols-1 md:grid-cols-3 gap-4 items-end animate-in fade-in duration-300 transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'}`;
+  const listContainerClass = `rounded-xl shadow-sm border overflow-hidden transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'}`;
+  const inputClass = `w-full px-3 py-2 border rounded-lg text-sm transition-all focus:ring-2 focus:ring-blue-500 outline-none ${isDark ? 'bg-slate-800 border-slate-700 text-slate-300' : 'bg-white border-gray-200 text-gray-600'}`;
 
   return (
     <div className="max-w-4xl mx-auto space-y-4 font-sans">
       {/* Barra de Filtros */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-4 items-end animate-in fade-in duration-300">
+      <div className={filterContainerClass}>
         <div className="space-y-1.5">
-          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5 ml-1">
+          <label className="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1.5 ml-1">
             <Calendar size={12} /> Data Inicial
           </label>
           <input 
             type="date" 
             value={dateStart} 
             onChange={(e) => setDateStart(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 focus:ring-2 focus:ring-blue-500 outline-none" 
+            className={inputClass} 
           />
         </div>
         <div className="space-y-1.5">
-          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5 ml-1">
+          <label className="text-[10px] font-black text-gray-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1.5 ml-1">
             <Calendar size={12} /> Data Final
           </label>
           <input 
             type="date" 
             value={dateEnd} 
             onChange={(e) => setDateEnd(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 focus:ring-2 focus:ring-blue-500 outline-none" 
+            className={inputClass} 
           />
         </div>
         <div className="flex gap-2">
           <button 
             onClick={clearFilters}
-            className="flex-1 flex items-center justify-center gap-2 bg-gray-50 text-gray-500 px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-100 transition-all border border-gray-200"
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all border ${isDark ? 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700' : 'bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200'}`}
           >
             <Eraser size={14} /> LIMPAR
           </button>
           {filteredMaints.length > 0 && (
             <button 
               onClick={downloadPDF} 
-              className="flex-1 flex items-center justify-center gap-2 bg-slate-800 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-900 transition-all shadow-md active:scale-95"
+              className={`flex-1 flex items-center justify-center gap-2 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-md active:scale-95 ${isDark ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-blue-600 hover:bg-blue-700'}`}
             >
               <Download size={14} /> PDF
             </button>
@@ -168,15 +173,15 @@ const MaintenanceList = ({ refreshKey, onEdit }) => {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="p-6 border-b border-gray-100 bg-slate-50 flex items-center justify-between">
+      <div className={listContainerClass}>
+        <div className={`p-6 border-b flex items-center justify-between ${isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-slate-50 border-gray-100'}`}>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-slate-200 rounded-lg">
-              <Filter size={20} className="text-slate-700" />
+            <div className={`p-2 rounded-lg ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
+              <Filter size={20} className={isDark ? 'text-slate-300' : 'text-slate-700'} />
             </div>
-            <h2 className="text-xl font-bold text-gray-800">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-slate-100">
               Histórico {filteredMaints.length < maintenances.length ? 'Filtrado' : ''} 
-              <span className="text-gray-400 text-sm ml-2 font-normal">({filteredMaints.length} registros)</span>
+              <span className="text-gray-400 dark:text-slate-500 text-sm ml-2 font-normal">({filteredMaints.length} registros)</span>
             </h2>
           </div>
         </div>
@@ -186,18 +191,18 @@ const MaintenanceList = ({ refreshKey, onEdit }) => {
             Nenhuma manutenção encontrada no período selecionado.
           </div>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-gray-100 dark:divide-slate-800">
             {filteredMaints.map((m) => {
               const info = statusMap[m.status] || statusMap.pending;
               const { Icon } = info;
               return (
-                <li key={m.id} className="p-6 hover:bg-slate-50 transition-colors">
+                <li key={m.id} className="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <div className="flex items-start gap-6">
-                    <div className="w-24 h-24 flex-shrink-0 bg-gray-50 border border-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                    <div className={`w-24 h-24 flex-shrink-0 border rounded-lg overflow-hidden flex items-center justify-center ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-gray-50 border-gray-100'}`}>
                       {m.photo ? (
                         <img src={`http://localhost:8000${m.photo}`} alt="Foto serviço" className="w-full h-full object-cover" />
                       ) : (
-                        <div className="text-center text-gray-300">
+                        <div className={`text-center ${isDark ? 'text-slate-600' : 'text-gray-300'}`}>
                           <ImageIcon size={24} className="mx-auto" />
                           <span className="text-[10px] uppercase font-black tracking-tighter block mt-1">SEM FOTO</span>
                         </div>
@@ -206,23 +211,23 @@ const MaintenanceList = ({ refreshKey, onEdit }) => {
 
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <h3 className="text-base font-bold text-gray-900">Monitor #{m.device}</h3>
+                        <h3 className="text-base font-bold text-gray-900 dark:text-white">Monitor #{m.device}</h3>
                         <span className={'flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border border-current opacity-90 ' + info.className}>
                           <Icon size={14} /> {info.label.toUpperCase()}
                         </span>
                       </div>
-                      <p className="text-gray-600 text-sm mb-3 leading-relaxed line-clamp-2">{m.description}</p>
-                      <div className="flex flex-wrap gap-2 text-xs text-gray-500 font-bold uppercase tracking-tight">
-                        <span className="bg-gray-100 px-2 py-1 rounded-md border border-gray-200">TÉCNICO: {m.technician}</span>
-                        <span className="bg-gray-100 px-2 py-1 rounded-md border border-gray-200">{new Date(m.created_at).toLocaleDateString('pt-BR')}</span>
+                      <p className="text-gray-600 dark:text-slate-400 text-sm mb-3 leading-relaxed line-clamp-2">{m.description}</p>
+                      <div className={`flex flex-wrap gap-2 text-xs font-bold uppercase tracking-tight ${isDark ? 'text-slate-500' : 'text-gray-500'}`}>
+                        <span className={`px-2 py-1 rounded-md border ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-gray-100 border-gray-200'}`}>TÉCNICO: {m.technician}</span>
+                        <span className={`px-2 py-1 rounded-md border ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-gray-100 border-gray-200'}`}>{new Date(m.created_at).toLocaleDateString('pt-BR')}</span>
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <button onClick={() => onEdit(m)} className="p-2 bg-white border border-gray-200 text-gray-400 hover:text-amber-500 hover:bg-amber-50 hover:border-amber-200 rounded-lg transition-all shadow-sm">
+                      <button onClick={() => onEdit(m)} className={`p-2 border rounded-lg transition-all shadow-sm ${isDark ? 'bg-slate-900 border-slate-700 text-slate-500 hover:text-amber-400 hover:bg-amber-900/20 hover:border-amber-900/30' : 'bg-white border-gray-200 text-gray-400 hover:text-amber-500 hover:bg-amber-50 hover:border-amber-200'}`}>
                         <Edit3 size={16} />
                       </button>
-                      <button onClick={() => handleDelete(m.id)} className="p-2 bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-200 rounded-lg transition-all shadow-sm">
+                      <button onClick={() => handleDelete(m.id)} className={`p-2 border rounded-lg transition-all shadow-sm ${isDark ? 'bg-slate-900 border-slate-700 text-slate-500 hover:text-red-400 hover:bg-red-900/20 hover:border-red-900/30' : 'bg-white border-gray-200 text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border-red-200'}`}>
                         <Trash2 size={16} />
                       </button>
                     </div>

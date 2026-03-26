@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, Monitor, Wrench, DollarSign, Clock } from 'lucide-react';
 
-const Dashboard = () => {
+const Dashboard = ({ theme }) => {
   const [stats, setStats] = useState({
     totalDevices: 0,
     activeMaintenances: 0,
@@ -41,60 +41,71 @@ const Dashboard = () => {
 
   if (loading) return <div className="text-center py-12 text-gray-500 font-medium">Analisando dados...</div>;
 
-  const cardStyle = "bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between";
+  const isDark = theme === 'dark';
+  const cardStyle = `p-6 rounded-xl border flex items-center justify-between transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800 shadow-none' : 'bg-white border-gray-100 shadow-sm'}`;
+  const sectionStyle = `p-8 rounded-xl border transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100 shadow-sm'}`;
+  const subCardStyle = `p-4 rounded-lg border transition-all duration-300`;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-slate-800 text-white rounded-lg"><LayoutDashboard size={24} /></div>
-        <h2 className="text-2xl font-bold text-gray-800">Painel Geral</h2>
+        <div className={`p-2 rounded-lg shadow-md transition-all ${isDark ? 'bg-indigo-600 text-white shadow-none' : 'bg-indigo-600 text-white shadow-indigo-200'}`}>
+          <LayoutDashboard size={24} />
+        </div>
+        <h2 className={`text-2xl font-bold ${isDark ? 'text-slate-100' : 'text-gray-800'}`}>Painel Geral</h2>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className={cardStyle}>
           <div>
-            <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Monitores Totais</p>
-            <h3 className="text-3xl font-black text-slate-800 mt-1">{stats.totalDevices}</h3>
+            <p className={`text-sm font-semibold uppercase tracking-wider ${isDark ? 'text-slate-500' : 'text-gray-400'}`}>Monitores Totais</p>
+            <h3 className={`text-3xl font-black mt-1 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>{stats.totalDevices}</h3>
           </div>
-          <div className="p-3 bg-blue-50 text-blue-600 rounded-full"><Monitor size={28} /></div>
+          <div className={`p-3 rounded-full ${isDark ? 'bg-blue-900/20 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+            <Monitor size={28} />
+          </div>
         </div>
 
         <div className={cardStyle}>
           <div>
-            <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Serviços Ativos</p>
-            <h3 className="text-3xl font-black text-amber-600 mt-1">{stats.activeMaintenances}</h3>
+            <p className={`text-sm font-semibold uppercase tracking-wider ${isDark ? 'text-slate-500' : 'text-gray-400'}`}>Serviços Ativos</p>
+            <h3 className={`text-3xl font-black mt-1 ${isDark ? 'text-amber-500' : 'text-amber-600'}`}>{stats.activeMaintenances}</h3>
           </div>
-          <div className="p-3 bg-amber-50 text-amber-600 rounded-full"><Clock size={28} /></div>
+          <div className={`p-3 rounded-full ${isDark ? 'bg-amber-900/20 text-amber-400' : 'bg-amber-50 text-amber-600'}`}>
+            <Clock size={28} />
+          </div>
         </div>
 
         <div className={cardStyle}>
           <div>
-            <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Total Concluídos</p>
-            <h3 className="text-3xl font-black text-emerald-600 mt-1">{stats.completed}</h3>
+            <p className={`text-sm font-semibold uppercase tracking-wider ${isDark ? 'text-slate-500' : 'text-gray-400'}`}>Total Concluídos</p>
+            <h3 className={`text-3xl font-black mt-1 ${isDark ? 'text-emerald-500' : 'text-emerald-600'}`}>{stats.completed}</h3>
           </div>
-          <div className="p-3 bg-emerald-50 text-emerald-600 rounded-full"><Wrench size={28} /></div>
+          <div className={`p-3 rounded-full ${isDark ? 'bg-emerald-900/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600'}`}>
+            <Wrench size={28} />
+          </div>
         </div>
       </div>
 
       {/* Progress Section */}
-      <div className="bg-white p-8 rounded-xl border border-gray-100 shadow-sm">
-        <h4 className="font-bold text-gray-800 mb-6 flex items-center gap-2">
-          <Wrench size={18} className="text-slate-400" /> 
+      <div className={sectionStyle}>
+        <h4 className={`font-bold mb-6 flex items-center gap-2 ${isDark ? 'text-slate-100' : 'text-gray-800'}`}>
+          <Wrench size={18} className={isDark ? 'text-slate-500' : 'text-slate-400'} /> 
           Progresso das Manutenções
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="p-4 bg-gray-50 rounded-lg border border-gray-100">
-            <span className="text-xs font-bold text-gray-400 block mb-1">AGUARDANDO</span>
-            <span className="text-xl font-black text-gray-700">{stats.pending}</span>
+          <div className={`${subCardStyle} ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-gray-50 border-gray-100'}`}>
+            <span className={`text-xs font-bold block mb-1 ${isDark ? 'text-slate-500' : 'text-gray-400'}`}>AGUARDANDO</span>
+            <span className={`text-xl font-black ${isDark ? 'text-slate-300' : 'text-gray-700'}`}>{stats.pending}</span>
           </div>
-          <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
-            <span className="text-xs font-bold text-blue-400 block mb-1">EM ANDAMENTO</span>
-            <span className="text-xl font-black text-blue-700">{stats.in_progress}</span>
+          <div className={`${subCardStyle} ${isDark ? 'bg-blue-900/20 border-blue-900/30' : 'bg-blue-50 border-blue-100'}`}>
+            <span className={`text-xs font-bold block mb-1 ${isDark ? 'text-blue-50' : 'text-blue-400'}`}>EM ANDAMENTO</span>
+            <span className={`text-xl font-black ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>{stats.in_progress}</span>
           </div>
-          <div className="p-4 bg-green-50 rounded-lg border border-green-100">
-            <span className="text-xs font-bold text-green-400 block mb-1">CONCLUÍDOS</span>
-            <span className="text-xl font-black text-green-700">{stats.completed}</span>
+          <div className={`${subCardStyle} ${isDark ? 'bg-green-900/20 border-green-900/30' : 'bg-green-50 border-green-100'}`}>
+            <span className={`text-xs font-bold block mb-1 ${isDark ? 'text-green-500' : 'text-green-400'}`}>CONCLUÍDOS</span>
+            <span className={`text-xl font-black ${isDark ? 'text-green-300' : 'text-green-700'}`}>{stats.completed}</span>
           </div>
         </div>
       </div>

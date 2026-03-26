@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Home, Settings as IconSettings, MapPin, Wrench, ChevronRight, Menu } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Home, Settings as IconSettings, MapPin, Wrench, ChevronRight, Menu, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DeviceForm from './components/DeviceForm';
 import DeviceList from './components/DeviceList';
@@ -21,6 +21,21 @@ function App() {
   const [editingDevice, setEditingDevice] = useState(null);
   const [editingMaintenance, setEditingMaintenance] = useState(null);
   const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+      // Forçagem extra para garantir que não fique "sujo"
+      if (root.classList.contains('dark')) root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
 
   const handleRefresh = () => setRefreshKey(prev => prev + 1);
   const resetEditing = () => {
@@ -34,7 +49,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900">
+    <div className={`flex h-screen overflow-hidden text-slate-900 dark:text-slate-100 font-sans transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
       
       {/* Botão flutuante para mobile se sidebar fechada */}
       {!isSidebarOpen && (
@@ -62,18 +77,24 @@ function App() {
                animate={{ opacity: 1 }}
                className="flex items-center gap-2"
             >
-              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200">
-                <span className="font-black text-xs">M</span>
-              </div>
-              <h1 className="text-xl font-black tracking-tight bg-gradient-to-r from-slate-900 to-slate-500 bg-clip-text text-transparent uppercase">MoQa OS</h1>
+              <h1 className="text-xl font-black tracking-tight bg-gradient-to-r from-slate-900 to-slate-500 dark:from-white dark:to-slate-400 bg-clip-text text-transparent uppercase">MoQa OS</h1>
             </motion.div>
           )}
-          <button 
-            onClick={() => setSidebarOpen(!isSidebarOpen)}
-            className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-indigo-600 transition-all ml-auto"
-          >
-            {isSidebarOpen ? <Menu size={20} /> : <ChevronRight size={20} />}
-          </button>
+          <div className="flex items-center gap-1 ml-auto">
+            <button 
+              onClick={toggleTheme}
+              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-indigo-600 transition-all"
+              title={theme === 'light' ? 'Modo Escuro' : 'Modo Claro'}
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
+            <button 
+              onClick={() => setSidebarOpen(!isSidebarOpen)}
+              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-indigo-600 transition-all"
+            >
+              {isSidebarOpen ? <Menu size={20} /> : <ChevronRight size={20} />}
+            </button>
+          </div>
         </div>
 
         <nav className="flex-1 px-4 py-6 space-y-2">
@@ -111,11 +132,11 @@ function App() {
         </nav>
 
         <div className="p-6">
-           <div className={`p-4 rounded-xl shadow-inner ${isSidebarOpen ? 'bg-indigo-50/50' : 'bg-transparent'}`}>
+           <div className={`p-4 rounded-xl shadow-inner ${isSidebarOpen ? 'bg-indigo-50/50 dark:bg-indigo-900/20' : 'bg-transparent'}`}>
              {isSidebarOpen && (
                <div className="flex flex-col gap-1">
                  <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Unidade Local</p>
-                 <p className="text-xs font-bold text-slate-600">CENTRAL 01</p>
+                 <p className="text-xs font-bold text-slate-600 dark:text-slate-400">CENTRAL 01</p>
                </div>
              )}
            </div>
@@ -135,28 +156,28 @@ function App() {
               transition={{ duration: 0.2, ease: "easeOut" }}
             >
               
-              {activeTab === 'dashboard' && <Dashboard />}
+              {activeTab === 'dashboard' && <Dashboard theme={theme} />}
 
               {activeTab === 'devices' && (
                 <div className="grid grid-cols-1 gap-8">
-                  <DeviceForm onSuccess={handleRefresh} editingDevice={editingDevice} onCancel={resetEditing} />
-                  <DeviceList refreshKey={refreshKey} onEdit={(dev) => { setEditingDevice(dev); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+                  <DeviceForm onSuccess={handleRefresh} editingDevice={editingDevice} onCancel={resetEditing} theme={theme} />
+                  <DeviceList refreshKey={refreshKey} onEdit={(dev) => { setEditingDevice(dev); window.scrollTo({ top: 0, behavior: 'smooth' }); }} theme={theme} />
                 </div>
               )}
 
               {activeTab === 'maintenance' && (
                 <div className="grid grid-cols-1 gap-8">
-                  <MaintenanceForm onSuccess={handleRefresh} editingMaintenance={editingMaintenance} onCancel={resetEditing} />
-                  <MaintenanceList refreshKey={refreshKey} onEdit={(m) => { setEditingMaintenance(m); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+                  <MaintenanceForm onSuccess={handleRefresh} editingMaintenance={editingMaintenance} onCancel={resetEditing} theme={theme} />
+                  <MaintenanceList refreshKey={refreshKey} onEdit={(m) => { setEditingMaintenance(m); window.scrollTo({ top: 0, behavior: 'smooth' }); }} theme={theme} />
                 </div>
               )}
 
-              {activeTab === 'settings' && <Settings />}
+              {activeTab === 'settings' && <Settings theme={theme} />}
 
             </motion.div>
           </AnimatePresence>
 
-          <footer className="pt-12 text-center text-slate-300">
+          <footer className="pt-12 text-center text-slate-300 dark:text-slate-600">
             <p className="text-[10px] font-black tracking-[0.2em] uppercase">Built with MoQa Design System ∙ 2026</p>
           </footer>
         </div>

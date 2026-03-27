@@ -42,14 +42,14 @@ const Dashboard = ({ theme }) => {
   if (loading) return <div className="text-center py-12 text-gray-500 font-medium">Analisando dados...</div>;
 
   const isDark = theme === 'dark';
-  const cardStyle = `p-6 rounded-xl border-2 flex items-center justify-between transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800 shadow-none' : 'bg-white border-slate-200 shadow-xl shadow-slate-100'}`;
-  const sectionStyle = `p-8 rounded-xl border-2 transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-lg'}`;
+  const cardStyle = `p-6 rounded-xl border-2 flex items-center justify-between transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`;
+  const sectionStyle = `p-8 rounded-xl border-2 transition-all duration-300 ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`;
   const subCardStyle = `p-4 rounded-lg border-2 transition-all duration-300`;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex items-center gap-3">
-        <div className={`p-2.5 rounded-xl shadow-lg transition-all ${isDark ? 'bg-indigo-600 text-white shadow-none' : 'bg-indigo-600 text-white shadow-indigo-200'}`}>
+        <div className={`p-2.5 rounded-xl transition-all ${isDark ? 'bg-indigo-600 text-white' : 'bg-indigo-600 text-white'}`}>
           <LayoutDashboard size={24} />
         </div>
         <h2 className={`text-2xl font-black uppercase tracking-tight ${isDark ? 'text-slate-100' : 'text-black'}`}>Painel Geral</h2>

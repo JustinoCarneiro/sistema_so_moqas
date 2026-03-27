@@ -6,8 +6,8 @@ const Settings = ({ theme }) => {
   const [msg, setMsg] = useState({ type: '', text: '' });
 
   const isDark = theme === 'dark';
-  const cardClass = `p-6 rounded-xl border-2 shadow-xl shadow-slate-200/50 flex flex-col h-full transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`;
-  const infoCardClass = `p-6 rounded-xl border-2 shadow-xl shadow-slate-200/50 transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`;
+  const cardClass = `p-6 rounded-xl border-2 flex flex-col h-full transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`;
+  const infoCardClass = `p-6 rounded-xl border-2 transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'}`;
 
   const clearDatabase = async () => {
     if (!window.confirm('CUIDADO! Isso apagará TODOS os registros de manutenções e monitores do banco de dados. Esta ação é irreversível. Deseja prosseguir?')) {
@@ -36,7 +36,7 @@ const Settings = ({ theme }) => {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in slide-in-from-bottom-4 duration-500 font-sans">
       <div className="flex items-center gap-3">
-        <div className="p-2.5 bg-indigo-600 text-white rounded-xl shadow-lg transition-all"><IconSettings size={24} /></div>
+        <div className="p-2.5 bg-indigo-600 text-white rounded-xl transition-all"><IconSettings size={24} /></div>
         <h2 className={`text-2xl font-black uppercase tracking-tight ${isDark ? 'text-slate-100' : 'text-black'}`}>Configurações do Sistema</h2>
       </div>
 

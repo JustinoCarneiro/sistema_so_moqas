@@ -103,7 +103,7 @@ const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
     doc.text(subtitle, 14, 28);
 
     const tableRows = filteredMaints.map(m => [
-      `#${m.device}`,
+      m.device_moqa_id || `#${m.device}`,
       m.technician,
       m.description,
       m.status.toUpperCase(),
@@ -125,8 +125,8 @@ const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
   if (loading) return <div className="flex justify-center items-center py-12 text-gray-500 dark:text-slate-400 font-medium font-sans italic">Carregando histórico...</div>;
 
   const isDark = theme === 'dark';
-  const filterContainerClass = `p-5 rounded-xl border-2 shadow-xl shadow-slate-200/50 grid grid-cols-1 md:grid-cols-3 gap-4 items-end animate-in fade-in duration-300 transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-300'}`;
-  const listContainerClass = `rounded-xl border-2 shadow-2xl shadow-slate-200/60 overflow-hidden transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-300'}`;
+  const filterContainerClass = `p-5 rounded-xl border-2 grid grid-cols-1 md:grid-cols-3 gap-4 items-end animate-in fade-in duration-300 transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-300'}`;
+  const listContainerClass = `rounded-xl border-2 overflow-hidden transition-colors ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-300'}`;
   const inputClass = `w-full px-4 py-2 border-2 rounded-xl text-sm transition-all focus:ring-2 focus:ring-blue-500 outline-none ${isDark ? 'bg-slate-800 border-slate-700 text-slate-300' : 'bg-white border-gray-300 text-black font-bold'}`;
 
   return (
@@ -211,7 +211,7 @@ const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
 
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2 flex-wrap">
-                        <h3 className="text-base font-bold text-gray-900 dark:text-white">Monitor #{m.device}</h3>
+                        <h3 className="text-base font-bold text-gray-900 dark:text-white">Monitor {m.device_moqa_id || `#${m.device}`}</h3>
                         <span className={'flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full border border-current opacity-90 ' + info.className}>
                           <Icon size={14} /> {info.label.toUpperCase()}
                         </span>

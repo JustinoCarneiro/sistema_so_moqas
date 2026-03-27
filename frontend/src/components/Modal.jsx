@@ -24,7 +24,7 @@ const Modal = ({ isOpen, onClose, title, children, theme }) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
-            className={`relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl shadow-2xl border transition-colors ${
+            className={`relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl border transition-colors ${
               isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'
             }`}
           >

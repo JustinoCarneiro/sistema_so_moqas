@@ -12,9 +12,12 @@ class Command(BaseCommand):
         # Inside Docker, the base dir for data is /data (mounted in docker-compose)
         base_dir = '/data'
 
+        self.stdout.write('Clearing existing data...')
+        EventLog.objects.all().delete()
+        Device.objects.all().delete()
+
         rede_csv = os.path.join(base_dir, 'Acompanhamento monitoramento QAr - Rede de monitoramento.csv')
         eventos_csv = os.path.join(base_dir, 'Acompanhamento monitoramento QAr - Relatórios de operação externa.csv')
-
 
         self.import_rede(rede_csv)
         self.import_eventos(eventos_csv)

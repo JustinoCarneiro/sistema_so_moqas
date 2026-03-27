@@ -7,9 +7,11 @@ class EventLogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MaintenanceSerializer(serializers.ModelSerializer):
+    device_moqa_id = serializers.ReadOnlyField(source='device.moqa_id')
+
     class Meta:
         model = Maintenance
-        fields = '__all__'
+        fields = ['id', 'device', 'device_moqa_id', 'technician', 'description', 'status', 'photo', 'created_at', 'updated_at']
 
 class DeviceSerializer(serializers.ModelSerializer):
     logs = EventLogSerializer(many=True, read_only=True)

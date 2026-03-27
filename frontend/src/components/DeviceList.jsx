@@ -26,6 +26,7 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
     const term = searchTerm.toLowerCase();
     const filtered = devices.filter(dev => 
       dev.zone.toLowerCase().includes(term) ||
+      (dev.moqa_id && dev.moqa_id.toLowerCase().includes(term)) ||
       (dev.neighborhood && dev.neighborhood.toLowerCase().includes(term)) ||
       (dev.reference && dev.reference.toLowerCase().includes(term))
     );
@@ -57,7 +58,7 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
         </div>
         <input
           type="text"
-          placeholder="Busque por zona ou bairro..."
+          placeholder="Busque por ID, zona ou bairro..."
           className={`block w-full pl-10 pr-3 py-3 border-2 rounded-xl leading-5 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${isDark ? 'bg-slate-900 border-slate-800 text-slate-100 placeholder-slate-500' : 'bg-white border-gray-300 text-black font-black placeholder-gray-400'}`}
           style={!isDark ? { color: '#000000' } : {}}
           value={searchTerm}
@@ -66,7 +67,7 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
       </div>
 
       {/* Tabela Desktop */}
-      <div className={`hidden md:block overflow-hidden rounded-xl border-2 transition-all ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200 shadow-lg'}`}>
+      <div className={`hidden md:block overflow-hidden rounded-xl border-2 transition-all ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200'}`}>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className={`${isDark ? 'bg-slate-800/50 text-slate-300' : 'bg-slate-200'} text-[11px] uppercase tracking-widest`}>
@@ -80,7 +81,7 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
           <tbody className={`divide-y-2 ${isDark ? 'divide-slate-800' : 'divide-gray-100'}`}>
             {filteredDevices.map(dev => (
               <tr key={dev.id} className={`group transition-colors ${isDark ? 'hover:bg-slate-800/30' : 'hover:bg-indigo-50/50'}`}>
-                <td className="px-6 py-5 text-xs" style={dataStyle}>#{dev.id}</td>
+                <td className="px-6 py-5 text-sm font-black" style={dataStyle}>{dev.moqa_id || `#${dev.id}`}</td>
                 <td className="px-6 py-5">
                   <div className="flex items-center gap-3">
                     <MapPin size={18} className={isDark ? "text-indigo-400" : "text-indigo-700"} />
@@ -126,9 +127,12 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
       {/* Cards para Mobile */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {filteredDevices.map(dev => (
-          <div key={dev.id} className={`p-6 rounded-2xl border-2 transition-all ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200 shadow-md'}`}>
+          <div key={dev.id} className={`p-6 rounded-2xl border-2 transition-all ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200'}`}>
             <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl" style={dataStyle}>{dev.zone}</h3>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">{dev.moqa_id || `#${dev.id}`}</span>
+                <h3 className="text-xl" style={dataStyle}>{dev.zone}</h3>
+              </div>
               <div className="flex gap-2">
                 <button onClick={() => onEdit(dev)} data-testid="edit-device-btn-mobile" className="p-2 border-2 rounded-lg"><Edit3 size={18} /></button>
                 <button onClick={() => handleDelete(dev.id)} data-testid="delete-device-btn-mobile" className="p-2 border-2 rounded-lg"><Trash2 size={18} /></button>

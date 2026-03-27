@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Settings as IconSettings, MapPin, Wrench, ChevronRight, Menu, Moon, Sun } from 'lucide-react';
+import { Home, Settings as IconSettings, MapPin, Wrench, ChevronLeft, Menu, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DeviceForm from './components/DeviceForm';
 import DeviceList from './components/DeviceList';
@@ -61,7 +61,7 @@ function App() {
       {!isSidebarOpen && (
         <button 
           onClick={() => setSidebarOpen(true)}
-          className="md:hidden fixed top-4 left-4 z-[60] p-2 bg-indigo-600 text-white rounded-lg shadow-lg"
+          className="md:hidden fixed top-4 left-4 z-[60] p-2 bg-indigo-600 text-white rounded-lg border-2 border-indigo-400"
         >
           <Menu size={20} />
         </button>
@@ -76,7 +76,7 @@ function App() {
         }}
         className={`glass-nav fixed md:relative z-50 h-screen transition-all duration-300 overflow-hidden ${!isSidebarOpen && 'pointer-events-none md:pointer-events-auto'}`}
       >
-        <div className="p-6 flex items-center justify-between">
+        <div className={`p-4 flex h-20 items-center ${isSidebarOpen ? 'justify-between' : 'justify-center flex-col gap-2'}`}>
           {isSidebarOpen && (
             <motion.div 
                initial={{ opacity: 0 }} 
@@ -88,21 +88,23 @@ function App() {
               </h1>
             </motion.div>
           )}
-          <div className="flex items-center gap-1 ml-auto">
-            <button 
-              onClick={toggleTheme}
-              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-indigo-600 transition-all"
-              title={theme === 'light' ? 'Modo Escuro' : 'Modo Claro'}
-            >
-              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-            </button>
+          <div className={`flex items-center gap-1 ${isSidebarOpen ? 'ml-auto' : 'flex-col gap-2'}`}>
+            {isSidebarOpen && (
+              <button 
+                onClick={toggleTheme}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-indigo-600 transition-all"
+                title={theme === 'light' ? 'Modo Escuro' : 'Modo Claro'}
+              >
+                {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+              </button>
+            )}
             <button 
               onClick={() => setSidebarOpen(!isSidebarOpen)}
               aria-label="toggle-sidebar"
               data-testid="sidebar-toggle"
               className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-indigo-600 transition-all"
             >
-              {isSidebarOpen ? <Menu size={20} /> : <ChevronRight size={20} />}
+              {isSidebarOpen ? <ChevronLeft size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
@@ -143,7 +145,7 @@ function App() {
         </nav>
 
         <div className="p-6">
-           <div className={`p-4 rounded-xl shadow-inner ${isSidebarOpen ? 'bg-indigo-50/50 dark:bg-indigo-900/20' : 'bg-transparent'}`}>
+           <div className={`p-4 rounded-xl border-2 ${isSidebarOpen ? (theme === 'dark' ? 'bg-indigo-900/20 border-indigo-800/50' : 'bg-indigo-50/50 border-indigo-100') : 'bg-transparent border-transparent'}`}>
              {isSidebarOpen && (
                <div className="flex flex-col gap-1">
                  <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Unidade Local</p>
@@ -155,7 +157,7 @@ function App() {
       </motion.aside>
 
       {/* Main Content Luxo */}
-      <main className="flex-1 overflow-y-auto relative bg-transparent px-4 py-6 md:px-12 md:py-12 custom-scrollbar">
+      <main className={`flex-1 overflow-y-auto relative px-4 py-6 md:px-12 md:py-12 custom-scrollbar ${theme === 'dark' ? 'bg-slate-950' : 'bg-slate-50'}`}>
         <div className="max-w-5xl mx-auto space-y-8 md:space-y-12">
           
           <AnimatePresence mode="wait">

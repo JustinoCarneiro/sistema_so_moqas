@@ -3,6 +3,7 @@ import { MapPin, Save, X } from 'lucide-react';
 
 const DeviceForm = ({ onSuccess, editingDevice, onCancel, theme }) => {
   const initialState = {
+    moqa_id: '',
     zone: '',
     latitude: '',
     longitude: '',
@@ -77,9 +78,14 @@ const DeviceForm = ({ onSuccess, editingDevice, onCancel, theme }) => {
       )}
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6" aria-label="form-device">
-        <div className="col-span-1 md:col-span-2">
+        <div>
+          <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>MoQA_ID</label>
+          <input name="moqa_id" value={formData.moqa_id} onChange={handleChange} placeholder="Ex: EDA13C" className={inputStyle} style={!isDark? {color:'#000000'}:{}} />
+        </div>
+        
+        <div>
           <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>ZONA / NOME</label>
-          <input name="zone" value={formData.zone} onChange={handleChange} required placeholder="Ex: Zona Norte - Setor A" className={inputStyle} style={!isDark? {color:'#000000'}:{}} />
+          <input name="zone" value={formData.zone} onChange={handleChange} required placeholder="Ex: Zona Norte" className={inputStyle} style={!isDark? {color:'#000000'}:{}} />
         </div>
         
         <div>

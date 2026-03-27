@@ -136,7 +136,7 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
                 <option value="" className="dark:bg-slate-800">Selecione um monitor</option>
                 {devices.map((dev) => (
                   <option key={dev.id} value={dev.id} className="dark:bg-slate-800">
-                    Monitor {dev.id} — {dev.zone}
+                    [{dev.moqa_id || `#${dev.id}`}] {dev.zone}
                   </option>
                 ))}
               </select>

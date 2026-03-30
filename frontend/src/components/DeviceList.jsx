@@ -27,6 +27,7 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
     const filtered = devices.filter(dev => 
       dev.zone.toLowerCase().includes(term) ||
       (dev.moqa_id && dev.moqa_id.toLowerCase().includes(term)) ||
+      (dev.legacy_id && dev.legacy_id.toLowerCase().includes(term)) ||
       (dev.neighborhood && dev.neighborhood.toLowerCase().includes(term)) ||
       (dev.reference && dev.reference.toLowerCase().includes(term))
     );
@@ -81,7 +82,10 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
           <tbody className={`divide-y-2 ${isDark ? 'divide-slate-800' : 'divide-gray-100'}`}>
             {filteredDevices.map(dev => (
               <tr key={dev.id} className={`group transition-colors ${isDark ? 'hover:bg-slate-800/30' : 'hover:bg-indigo-50/50'}`}>
-                <td className="px-6 py-5 text-sm font-black" style={dataStyle}>{dev.moqa_id || `#${dev.id}`}</td>
+                <td className="px-6 py-5 text-sm font-black" style={dataStyle}>
+                  {dev.moqa_id || `#${dev.id}`}
+                  {dev.legacy_id && <div className="text-xs text-gray-400 font-normal mt-1">Antigo: {dev.legacy_id}</div>}
+                </td>
                 <td className="px-6 py-5">
                   <div className="flex items-center gap-3">
                     <MapPin size={18} className={isDark ? "text-indigo-400" : "text-indigo-700"} />
@@ -130,7 +134,10 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
           <div key={dev.id} className={`p-6 rounded-2xl border-2 transition-all ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200'}`}>
             <div className="flex justify-between items-start mb-4">
               <div className="flex flex-col">
-                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">{dev.moqa_id || `#${dev.id}`}</span>
+                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest">
+                  {dev.moqa_id || `#${dev.id}`}
+                  {dev.legacy_id && ` (ANTIGO: ${dev.legacy_id})`}
+                </span>
                 <h3 className="text-xl" style={dataStyle}>{dev.zone}</h3>
               </div>
               <div className="flex gap-2">

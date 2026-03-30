@@ -2,6 +2,7 @@ from django.db import models
 
 class Device(models.Model):
     moqa_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    legacy_id = models.CharField(max_length=50, null=True, blank=True)
     point = models.IntegerField(null=True, blank=True)
     zone = models.CharField(max_length=100)
     latitude = models.FloatField()

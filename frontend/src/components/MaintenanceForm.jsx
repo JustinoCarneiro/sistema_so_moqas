@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, X, Wrench, Camera, ImageIcon } from 'lucide-react';
+import { Save, X, Wrench, Camera, ImageIcon, Clock } from 'lucide-react';
 
 const statusOptions = [
   { value: 'pending', label: 'PENDENTE' },
@@ -26,6 +26,8 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState({ type: '', text: '' });
+  const [newUpdate, setNewUpdate] = useState('');
+  const [savingUpdate, setSavingUpdate] = useState(false);
 
   useEffect(() => {
     const fetchDevices = async () => {
@@ -68,6 +70,37 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
     if (file) {
       setPhoto(file);
       setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleAddUpdate = async () => {
+    if (!newUpdate.trim()) return;
+    setSavingUpdate(true);
+    setMsg({ type: '', text: '' });
+    try {
+      const response = await fetch('http://localhost:8000/api/maintenance-updates/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          maintenance: editingMaintenance.id,
+          technician: formData.technician || 'Sistema',
+          description: newUpdate
+        })
+      });
+      if (!response.ok) throw new Error('Erro ao adicionar evolução');
+      const data = await response.json();
+      
+      if (editingMaintenance) {
+         if(!editingMaintenance.updates) editingMaintenance.updates = [];
+         editingMaintenance.updates = [data, ...editingMaintenance.updates];
+         setFormData({...formData}); // trigger re-render
+      }
+      setNewUpdate('');
+      setMsg({ type: 'success', text: 'Evolução adicionada com sucesso!' });
+    } catch (err) {
+      setMsg({ type: 'error', text: err.message });
+    } finally {
+      setSavingUpdate(false);
     }
   };
 
@@ -181,9 +214,57 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
         </div>
 
         <div>
-          <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>DESCRIÇÃO DO SERVIÇO</label>
-          <textarea name="description" value={formData.description} onChange={handleChange} required rows={3} placeholder="Descreva o defeito..." className={inputClass} style={!isDark? {color: '#000000'}:{}} />
+          <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>{editingMaintenance ? 'DESCRIÇÃO INICIAL DO SERVIÇO' : 'DESCRIÇÃO DO SERVIÇO'}</label>
+          <textarea name="description" value={formData.description} onChange={handleChange} required rows={3} placeholder="Descreva o defeito inicial..." className={inputClass} style={!isDark? {color: '#000000'}:{}} />
         </div>
+
+        {editingMaintenance && (
+          <div className="pt-2 border-t-2 border-gray-100 dark:border-slate-800">
+            <h3 className="text-sm font-black uppercase tracking-wide mb-4 flex items-center gap-2 mt-4" style={labelStyle}>
+              <Clock size={16} className="text-indigo-500" />
+              Histórico de Evolução
+            </h3>
+            
+            <div className="space-y-4 mb-6 max-h-48 overflow-y-auto px-2 custom-scrollbar">
+              {editingMaintenance.updates && editingMaintenance.updates.length > 0 ? (
+                editingMaintenance.updates.map((update, idx) => (
+                  <div key={update.id || idx} className={`p-4 rounded-xl border-l-4 border-indigo-500 ${isDark ? 'bg-slate-800/50' : 'bg-gray-50'}`}>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{update.technician}</span>
+                      <span className="text-[10px] bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-0.5 rounded-full">
+                         {new Date(update.created_at).toLocaleString('pt-BR')}
+                      </span>
+                    </div>
+                    <p className="text-sm dark:text-slate-300">{update.description}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-center text-gray-500 italic py-4">Nenhuma evolução registrada.</p>
+              )}
+            </div>
+
+            <div className={`p-4 rounded-xl border-2 ${isDark ? 'border-slate-700 bg-slate-900/50' : 'border-gray-200 bg-white'}`}>
+              <label className="block text-xs mb-2 uppercase tracking-wide text-gray-500 font-bold">Nova Evolução</label>
+              <div className="flex flex-col gap-2">
+                <textarea 
+                  value={newUpdate} 
+                  onChange={(e) => setNewUpdate(e.target.value)} 
+                  rows={2} 
+                  placeholder="Relate o acompanhamento ou atualização de hoje..." 
+                  className={`w-full px-3 py-2 border-2 rounded-lg text-sm resize-none focus:ring-2 focus:ring-indigo-500 outline-none ${isDark ? 'bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-gray-50 border-gray-300 text-black placeholder-gray-400'}`}
+                />
+                <button 
+                  type="button"
+                  onClick={handleAddUpdate}
+                  disabled={!newUpdate.trim() || savingUpdate}
+                  className="self-end px-6 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 dark:bg-indigo-900/40 dark:hover:bg-indigo-800/40 dark:text-indigo-300 rounded-lg font-bold transition-all disabled:opacity-50 text-xs uppercase cursor-pointer"
+                >
+                  {savingUpdate ? 'Adicionando...' : 'Adicionar Evolução'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="pt-6 flex justify-end gap-3 border-t-2 border-gray-100 dark:border-slate-800">
           <button 

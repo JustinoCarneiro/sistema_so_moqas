@@ -54,3 +54,16 @@ class Maintenance(models.Model):
 
     def __str__(self):
         return f"Manutenção {self.id} - {self.device.zone}"
+
+class MaintenanceUpdate(models.Model):
+    maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE, related_name='updates', verbose_name="Ordem de Serviço")
+    technician = models.CharField(max_length=100, verbose_name="Técnico Responsável")
+    description = models.TextField(verbose_name="Descrição da Evolução")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Data/Hora")
+
+    class Meta:
+        db_table = 'manutencao_evolucao'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Evolução da Manutenção {self.maintenance.id} em {self.created_at.strftime('%d/%m/%Y %H:%M')}"

@@ -45,7 +45,7 @@ class Maintenance(models.Model):
     technician = models.CharField(max_length=100, verbose_name="Técnico")
     description = models.TextField(verbose_name="Descrição do Serviço")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Status")
-    photo = models.ImageField(upload_to='maintenance_photos/', null=True, blank=True, verbose_name="Foto")
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Data de Entrada")
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -67,3 +67,15 @@ class MaintenanceUpdate(models.Model):
 
     def __str__(self):
         return f"Evolução da Manutenção {self.maintenance.id} em {self.created_at.strftime('%d/%m/%Y %H:%M')}"
+
+class MaintenancePhoto(models.Model):
+    maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE, related_name='photos', verbose_name="Ordem de Serviço")
+    photo = models.ImageField(upload_to='maintenance_photos/', verbose_name="Foto")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Data do Upload")
+
+    class Meta:
+        db_table = 'manutencao_fotos'
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Foto da Manutenção {self.maintenance.id}"

@@ -1,0 +1,76 @@
+Warning: The allowCypressEnv configuration option is enabled. This allows any browser code to read values from Cypress.env(). This is insecure and will be removed in a future major version.
+
+1. Replace Cypress.env() calls with cy.env() (for sensitive values) or Cypress.expose() (for public configuration)
+2. Set allowCypressEnv: false in your Cypress configuration to disable Cypress.env()
+
+Learn more: https://on.cypress.io/cypress-env-migration
+
+
+================================================================================
+
+  (Run Starting)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Cypress:        15.12.0                                                                        │
+  │ Browser:        Electron 138 (headless)                                                        │
+  │ Node Version:   v24.13.1 (/home/marcos/.nvm/versions/node/v24.13.1/bin/node)                   │
+  │ Specs:          1 found (admin.cy.js)                                                          │
+  │ Searched:       cypress/e2e/admin.cy.js                                                        │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                    
+  Running:  admin.cy.js                                                                     (1 of 1)
+
+
+  MoQa OS - Gestão Administrativa e Filtros
+    1) deve realizar a edição de um monitor existente
+    ✓ deve filtrar manutenções por período de data (4124ms)
+    ✓ deve navegar até configurações e verificar status do sistema (3748ms)
+
+
+  2 passing (21s)
+  1 failing
+
+  1) MoQa OS - Gestão Administrativa e Filtros
+       deve realizar a edição de um monitor existente:
+     AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-testid="success-alert"]`, but never found it.
+      at Context.eval (webpack://frontend/./cypress/e2e/admin.cy.js:31:66)
+
+
+
+
+  (Results)
+
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ Tests:        3                                                                                │
+  │ Passing:      2                                                                                │
+  │ Failing:      1                                                                                │
+  │ Pending:      0                                                                                │
+  │ Skipped:      0                                                                                │
+  │ Screenshots:  1                                                                                │
+  │ Video:        false                                                                            │
+  │ Duration:     21 seconds                                                                       │
+  │ Spec Ran:     admin.cy.js                                                                      │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+  (Screenshots)
+
+  -  /home/marcos/Applications/sistema_so_moqas/frontend/cypress/screenshots/admin.cy     (1280x720)
+     .js/MoQa OS - Gestão Administrativa e Filtros -- deve realizar a edição de um mo               
+     nitor existente (failed).png                                                                   
+
+
+================================================================================
+
+  (Run Finished)
+
+
+       Spec                                              Tests  Passing  Failing  Pending  Skipped  
+  ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │ ✖  admin.cy.js                              00:21        3        2        1        -        - │
+  └────────────────────────────────────────────────────────────────────────────────────────────────┘
+    ✖  1 of 1 failed (100%)                     00:21        3        2        1        -        -  
+

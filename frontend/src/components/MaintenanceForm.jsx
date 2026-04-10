@@ -21,8 +21,8 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
   };
 
   const [formData, setFormData] = useState(initialState);
-  const [photo, setPhoto] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [photos, setPhotos] = useState([]);
+  const [existingPhotos, setExistingPhotos] = useState([]);
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState({ type: '', text: '' });
@@ -52,11 +52,11 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
         description: editingMaintenance.description,
         status: editingMaintenance.status,
       });
-      setPreview(editingMaintenance.photo ? `http://localhost:8000${editingMaintenance.photo}` : null);
+      setExistingPhotos(editingMaintenance.photos || []);
     } else {
       setFormData(initialState);
-      setPhoto(null);
-      setPreview(null);
+      setPhotos([]);
+      setExistingPhotos([]);
     }
   }, [editingMaintenance]);
 
@@ -66,10 +66,24 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPhoto(file);
-      setPreview(URL.createObjectURL(file));
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setPhotos(prev => [...prev, ...files]);
+    }
+  };
+
+  const removeNewPhoto = (index) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeExistingPhoto = async (photoId) => {
+    if (window.confirm('Tem certeza que deseja excluir esta foto permanentemente?')) {
+      try {
+         await fetch(`http://localhost:8000/api/maintenance-photos/${photoId}/`, { method: 'DELETE' });
+         setExistingPhotos(prev => prev.filter(p => p.id !== photoId));
+      } catch (err) {
+         console.error('Erro ao excluir foto', err);
+      }
     }
   };
 
@@ -118,7 +132,9 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
     dataToSend.append('technician', formData.technician);
     dataToSend.append('description', formData.description);
     dataToSend.append('status', formData.status);
-    if (photo) dataToSend.append('photo', photo);
+    photos.forEach(f => {
+      dataToSend.append('photos', f);
+    });
 
     const method = editingMaintenance ? 'PUT' : 'POST';
 
@@ -134,8 +150,8 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
       
       if (!editingMaintenance) {
         setFormData(initialState);
-        setPhoto(null);
-        setPreview(null);
+        setPhotos([]);
+        setExistingPhotos([]);
       }
 
       // Pequeno delay para o usuário ver a mensagem antes do modal fechar
@@ -191,24 +207,33 @@ const MaintenanceForm = ({ onSuccess, editingMaintenance, onCancel, theme }) => 
           </div>
 
           <div className="flex flex-col">
-            <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>FOTO DA MANUTENÇÃO</label>
-            <div className="flex-1 border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-xl flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 transition-all cursor-pointer relative overflow-hidden group">
-              {preview ? (
-                <div className="w-full h-full relative">
-                  <img src={preview} alt="Preview" className="w-full h-full object-cover rounded-lg" />
-                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="text-white text-xs font-black uppercase tracking-wider flex items-center gap-2">
-                       <Camera size={18} /> Trocar Foto
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center">
-                  <ImageIcon size={32} className="text-gray-400 dark:text-slate-600 mx-auto mb-2" />
-                  <p className="text-xs font-black uppercase tracking-tighter" style={labelStyle}>Clique para anexar foto</p>
-                </div>
-              )}
-              <input type="file" accept="image/*" onChange={handleFileChange} className="absolute inset-0 opacity-0 cursor-pointer" />
+            <label className="block text-sm mb-2 uppercase tracking-wide" style={labelStyle}>FOTOS DA MANUTENÇÃO</label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {existingPhotos.map(p => {
+                 const url = p.photo.startsWith('http') ? p.photo : `http://localhost:8000${p.photo}`;
+                 return (
+                 <div key={p.id} className="relative group rounded-xl overflow-hidden border-2 border-gray-200 dark:border-slate-700 aspect-square">
+                   <img src={url} alt="Foto" className="w-full h-full object-cover" />
+                   <button type="button" onClick={() => removeExistingPhoto(p.id)} className="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                     <X size={16} />
+                   </button>
+                 </div>
+              )})}
+              
+              {photos.map((f, i) => (
+                 <div key={i} className="relative group rounded-xl overflow-hidden border-2 border-indigo-300 dark:border-indigo-700 aspect-square">
+                   <img src={URL.createObjectURL(f)} alt="Nova foto" className="w-full h-full object-cover" />
+                   <button type="button" onClick={() => removeNewPhoto(i)} className="absolute top-2 right-2 bg-red-600 text-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                     <X size={16} />
+                   </button>
+                 </div>
+              ))}
+
+              <label className="border-2 border-dashed border-gray-300 dark:border-slate-700 rounded-xl flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-slate-800/50 hover:bg-gray-100 transition-all cursor-pointer aspect-square group">
+                 <ImageIcon size={28} className="text-gray-400 dark:text-slate-600 mb-2 group-hover:scale-110 transition-transform" />
+                 <p className="text-xs font-black uppercase tracking-tighter text-gray-500 text-center" style={labelStyle}>Adicionar <br/> Fotos</p>
+                 <input type="file" accept="image/*" multiple onChange={handleFileChange} className="hidden" />
+              </label>
             </div>
           </div>
         </div>

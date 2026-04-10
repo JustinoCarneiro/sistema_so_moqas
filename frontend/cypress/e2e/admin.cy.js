@@ -16,19 +16,25 @@ describe('MoQa OS - Gestão Administrativa e Filtros', () => {
           cy.get('input[name="longitude"]').type('0');
           cy.contains(/salvar monitor/i).click();
           cy.get('[data-testid="success-alert"]').should('be.visible');
-          cy.wait(1000);
+          cy.get('[data-testid="success-alert"]', { timeout: 10000 }).should('not.exist');
         }
       });
 
       // Recarrega a busca do botão para garantir que ele está no DOM após o IF
       cy.get('[data-testid="edit-device-btn"]').first().should('be.visible').click({ force: true });
       
+      cy.intercept('PUT', '**/api/devices/*').as('updateDevice');
+      
       // Altera a zona e salva
       cy.get('input[name="zone"]').should('be.visible').clear().type('ZONA ATUALIZADA');
       cy.contains(/atualizar dados/i).click();
       
-      // Verifica sucesso
-      cy.get('[data-testid="success-alert"]', { timeout: 10000 }).should('be.visible');
+      // Verifica sucesso esperando a API
+      cy.wait('@updateDevice');
+      cy.get('[data-testid="success-alert"]', { timeout: 10000 })
+        .scrollIntoView()
+        .should('be.visible');
+        
       cy.get('table').scrollIntoView().should('contain', 'ZONA ATUALIZADA');
     });
   

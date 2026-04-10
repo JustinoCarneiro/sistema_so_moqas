@@ -16,7 +16,7 @@ O sistema utiliza um design premium com as seguintes características:
 ## 🚀 Funcionalidades Principais
 1.  **Dashboard de Performance**: Indicadores de monitores totais, serviços ativos e progresso de manutenções.
 2.  **Monitoramento Geográfico**: Registro completo de monitores com coordenadas de latitude/longitude e integração visual.
-3.  **Gestão Especializada**: Sistema de ordens de serviço (OS) com controle de status (Pendente, Em Andamento, Concluído).
+3.  **Gestão Especializada**: Sistema de ordens de serviço (OS) com controle de status e **Histórico de Evolução (Timeline)** para acompanhamento de campo (MoQa a MoQa).
 4.  **Galeria de Fotos**: Upload de fotos para registro visual das manutenções realizadas.
 5.  **Exportação PDF**: Geração de relatórios profissionais com filtros por período de data.
 

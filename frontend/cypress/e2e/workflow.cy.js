@@ -53,5 +53,14 @@ describe('MoQa OS - Fluxo de Cadastros', () => {
       cy.wait('@getMaints');
       
       cy.contains(techName).scrollIntoView().should('exist');
+      // 5. Testar Histórico de Evolução
+      cy.wait(500); // Aguarda renderização da tabela
+      cy.get('[data-testid="edit-maint-btn"]').first().click({ force: true });
+      cy.contains(/Histórico de Evolução/i).should('be.visible');
+      cy.get('textarea[placeholder*="hoje"]').type('Atualização automatizada via Cypress E2E');
+      cy.contains(/adicionar evolução/i).click();
+      cy.contains(/evolução adicionada/i).should('be.visible');
+      cy.get('.custom-scrollbar').should('contain', 'Atualização automatizada via Cypress E2E');
+      cy.contains(/cancelar/i).click();
     });
   });

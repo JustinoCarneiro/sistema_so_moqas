@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, CheckCircle2, XCircle, Wrench, Trash2, Edit3, Download, ImageIcon, Calendar, Filter, Eraser } from 'lucide-react';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { Clock, CheckCircle2, XCircle, Wrench, Trash2, Edit3, ImageIcon, Calendar, Filter, Eraser, FileSpreadsheet } from 'lucide-react';
 
 const statusMap = {
   completed: {
@@ -88,38 +86,35 @@ const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
     }
   };
 
-  const downloadPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.setTextColor(30, 41, 59);
-    doc.text('RELATÓRIO DE MANUTENÇÕES - MOQA OS', 14, 20);
-    doc.setFontSize(10);
-    doc.setTextColor(100);
-    
-    let subtitle = `Emitido em: ${new Date().toLocaleString('pt-BR')}`;
-    if (dateStart || dateEnd) {
-      subtitle += ` | Período: ${dateStart || '?'} até ${dateEnd || 'hoje'}`;
-    }
-    doc.text(subtitle, 14, 28);
 
-    const tableRows = filteredMaints.map(m => [
+
+  const downloadCSV = () => {
+    if (filteredMaints.length === 0) return;
+    const headers = ['MONITOR', 'ID ANTIGO', 'ZONA', 'BAIRRO', 'REFERÊNCIA', 'TÉCNICO', 'DESCRIÇÃO DO SERVIÇO', 'STATUS', 'DATA'];
+    const rows = filteredMaints.map(m => [
       m.device_moqa_id || `#${m.device}`,
+      m.device_legacy_id || '',
+      m.device_zone || '',
+      m.device_neighborhood || '',
+      m.device_reference || '',
       m.technician,
       m.description,
       m.status.toUpperCase(),
       new Date(m.created_at).toLocaleDateString('pt-BR')
     ]);
-
-    doc.autoTable({
-      startY: 35,
-      head: [['MONITOR', 'TÉCNICO', 'DESCRIÇÃO DO SERVIÇO', 'STATUS', 'DATA']],
-      body: tableRows,
-      headStyles: { fillColor: [30, 41, 59], textColor: [255, 255, 255] },
-      alternateRowStyles: { fillColor: [248, 250, 252] },
-      styles: { fontSize: 8, cellPadding: 4 }
-    });
-
-    doc.save('relatorio-filtrado-moqa.pdf');
+    const csvContent = [
+      headers.join(';'),
+      ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'relatorio_manutencoes_moqa.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (loading) return <div className="flex justify-center items-center py-12 text-gray-500 dark:text-slate-400 font-medium font-sans italic">Carregando histórico...</div>;
@@ -164,10 +159,10 @@ const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
           </button>
           {filteredMaints.length > 0 && (
             <button 
-              onClick={downloadPDF} 
-              className={`flex-1 flex items-center justify-center gap-2 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-md active:scale-95 ${isDark ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+              onClick={downloadCSV} 
+              className={`flex-1 flex items-center justify-center gap-2 text-white px-4 py-2 rounded-lg text-xs font-bold transition-all shadow-md active:scale-95 ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-500 hover:bg-green-600'}`}
             >
-              <Download size={14} /> PDF
+              <FileSpreadsheet size={14} /> CSV
             </button>
           )}
         </div>
@@ -199,12 +194,19 @@ const MaintenanceList = ({ refreshKey, onEdit, theme }) => {
                 <li key={m.id} className="p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <div className="flex items-start gap-6">
                     <div className={`w-24 h-24 flex-shrink-0 border rounded-lg overflow-hidden flex items-center justify-center ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-gray-50 border-gray-100'}`}>
-                      {m.photo ? (
-                        <img src={`http://localhost:8000${m.photo}`} alt="Foto serviço" className="w-full h-full object-cover" />
+                      {m.photos && m.photos.length > 0 ? (
+                        <div className="w-full h-full relative">
+                          <img src={m.photos[0].photo.startsWith('http') ? m.photos[0].photo : `http://localhost:8000${m.photos[0].photo}`} alt="Foto serviço" className="w-full h-full object-cover" />
+                          {m.photos.length > 1 && (
+                            <div className="absolute bottom-1 right-1 bg-black/70 text-white text-[10px] font-black px-1.5 py-0.5 rounded-md backdrop-blur-sm shadow-sm ring-1 ring-white/20">
+                              +{m.photos.length - 1} FOTOS
+                            </div>
+                          )}
+                        </div>
                       ) : (
                         <div className={`text-center ${isDark ? 'text-slate-600' : 'text-gray-300'}`}>
                           <ImageIcon size={24} className="mx-auto" />
-                          <span className="text-[10px] uppercase font-black tracking-tighter block mt-1">SEM FOTO</span>
+                          <span className="text-[10px] uppercase font-black tracking-tighter block mt-1">SEM FOTOS</span>
                         </div>
                       )}
                     </div>

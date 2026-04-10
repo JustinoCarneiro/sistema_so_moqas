@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, ExternalLink, Search, Trash2, Edit3 } from 'lucide-react';
+import { MapPin, ExternalLink, Search, Trash2, Edit3, FileSpreadsheet } from 'lucide-react';
 
 const DeviceList = ({ refreshKey, onEdit, theme }) => {
   const [devices, setDevices] = useState([]);
@@ -45,6 +45,32 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
     }
   };
 
+  const downloadCSV = () => {
+    if (filteredDevices.length === 0) return;
+    const headers = ['ID do MoQa', 'ID Antigo', 'Zona', 'Bairro', 'Referência', 'Google Locator'];
+    const rows = filteredDevices.map(dev => [
+      dev.moqa_id || `#${dev.id}`,
+      dev.legacy_id || '',
+      dev.zone || '',
+      dev.neighborhood || '',
+      dev.reference || '',
+      dev.google_locator || ''
+    ]);
+    const csvContent = [
+      headers.join(';'),
+      ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'lista_monitores_moqa.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) return <div className="text-center py-8 font-black" style={{ color: '#000000' }}>Buscando monitores...</div>;
 
   const isDark = theme === 'dark';
@@ -53,18 +79,27 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 text-gray-400" />
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-4 w-4 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Busque por ID, zona ou bairro..."
+            className={`block w-full pl-10 pr-3 py-3 border-2 rounded-xl leading-5 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${isDark ? 'bg-slate-900 border-slate-800 text-slate-100 placeholder-slate-500' : 'bg-white border-gray-300 text-black font-black placeholder-gray-400'}`}
+            style={!isDark ? { color: '#000000' } : {}}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-        <input
-          type="text"
-          placeholder="Busque por ID, zona ou bairro..."
-          className={`block w-full pl-10 pr-3 py-3 border-2 rounded-xl leading-5 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${isDark ? 'bg-slate-900 border-slate-800 text-slate-100 placeholder-slate-500' : 'bg-white border-gray-300 text-black font-black placeholder-gray-400'}`}
-          style={!isDark ? { color: '#000000' } : {}}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <button 
+          onClick={downloadCSV}
+          className={`px-4 py-3 rounded-xl flex items-center gap-2 text-sm font-bold text-white transition-all shadow-md active:scale-95 ${isDark ? 'bg-green-600 hover:bg-green-700' : 'bg-green-500 hover:bg-green-600'}`}
+        >
+          <FileSpreadsheet size={18} />
+          <span className="hidden sm:inline">CSV</span>
+        </button>
       </div>
 
       {/* Tabela Desktop */}

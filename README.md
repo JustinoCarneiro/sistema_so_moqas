@@ -17,8 +17,9 @@ O sistema utiliza um design premium com as seguintes características:
 1.  **Dashboard de Performance**: Indicadores de monitores totais, serviços ativos e progresso de manutenções.
 2.  **Monitoramento Geográfico**: Registro completo de monitores com coordenadas de latitude/longitude e integração visual.
 3.  **Gestão Especializada**: Sistema de ordens de serviço (OS) com controle de status e **Histórico de Evolução (Timeline)** para acompanhamento de campo (MoQa a MoQa).
-4.  **Galeria de Fotos**: Upload de fotos para registro visual das manutenções realizadas.
-5.  **Exportação PDF**: Geração de relatórios profissionais com filtros por período de data.
+4.  **Galeria de Múltiplas Fotos**: Suporte completo ao upload e gerenciamento de múltiplas grades de fotografias integradas a cada ordem de serviço em campo.
+5.  **Exportação de Dados (CSV)**: Geração de planilhas nativas para auditoria, integrando de forma autônoma os descritivos de trabalho aos vínculos de localização completa do poste (ID Antigo, Zona, Referência).
+6.  **Roteamento Inteligente de Campo**: Mecanismo tático embarcado onde o técnico seleciona aparelhos defeituosos e o sistema capta seu sinal GPS, utilizando matemática de proximidade (Fórmula de Haversine) para tecer a rota geometricamente mais rápida e enviá-la ordenada direto para o aplicativo do Google Maps.
 
 ---
 
@@ -35,7 +36,6 @@ O sistema utiliza um design premium com as seguintes características:
 -   **Tailwind CSS**: Estilização moderna e responsiva.
 -   **Lucide React**: Biblioteca de ícones vetoriais.
 -   **Framer Motion**: Animações de interface de alto desempenho.
--   **jsPDF**: Geração dinâmica de relatórios PDF.
 
 ---
 

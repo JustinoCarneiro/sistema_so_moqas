@@ -7,8 +7,10 @@ O **MoQa** é uma plataforma de gestão operacional para o monitoramento e manut
 ## 💎 Design System & UX
 O sistema utiliza um design premium com as seguintes características:
 - **Glassmorphism**: Interface translúcida com efeitos de desfoque de fundo (Blur).
-- **Sidebar Retrátil**: Menu inteligente que maximiza o espaço de trabalho.
-- **Animações Fluídas**: Transições de abas via `Framer Motion`.
+- **Sidebar Retrátil & Mobile Slide-up**: Menu inteligente que maximiza o espaço no desktop e uma transição exclusiva de **"subida de app"** no mobile, revelando a navegação de forma fluida.
+- **Header Mobile**: Cabeçalho dedicado para o modo responsivo, garantindo acesso rápido ao menu e identidade visual.
+- **Navegação Tática**: Botão flutuante dinâmico de **"Voltar ao Topo"** no canto inferior direito para otimizar a experiência em listas longas.
+- **Animações Fluídas**: Transições de abas e estados via `Framer Motion` com física de mola (spring).
 - **Micro-interações**: Feedbacks visuais em tempo real para ações do usuário.
 
 ---
@@ -33,9 +35,9 @@ O sistema utiliza um design premium com as seguintes características:
 
 ### Frontend (React + Vite)
 -   **React 18** + **Vite**: Desenvolvimento veloz e build otimizado.
--   **Tailwind CSS**: Estilização moderna e responsiva.
+-   **Tailwind CSS**: Estilização moderna e responsiva com foco em estética premium.
 -   **Lucide React**: Biblioteca de ícones vetoriais.
--   **Framer Motion**: Animações de interface de alto desempenho.
+-   **Framer Motion**: Animações de interface de alto desempenho e gestos.
 
 ---
 
@@ -54,9 +56,14 @@ O projeto segue padrões de qualidade elevados com três camadas de testes:
 ### Pré-requisitos
 -   Docker e Docker Compose
 -   Node.js 18+
--   Python 3.12+ (opcional se não usar Docker)
+-   Python 3.12+
 
-### 🐍 Backend
+### 🐳 Via Docker (Recomendado)
+```bash
+docker-compose up --build
+```
+
+### 🐍 Manual - Backend
 ```bash
 cd backend
 python -m venv venv
@@ -66,7 +73,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-### ⚛️ Frontend
+### ⚛️ Manual - Frontend
 ```bash
 cd frontend
 npm install

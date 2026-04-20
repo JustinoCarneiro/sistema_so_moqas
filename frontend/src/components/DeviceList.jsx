@@ -19,6 +19,8 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
   const [selectedDevices, setSelectedDevices] = useState([]);
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizedChunks, setOptimizedChunks] = useState([]);
+  const [originMode, setOriginMode] = useState('first_monitor'); // Default for pc/laptop reliability
+  const [customAddress, setCustomAddress] = useState('');
 
   useEffect(() => {
     setOptimizedChunks([]);
@@ -74,15 +76,52 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
         setIsOptimizing(false);
       };
 
+      if (originMode === 'custom') {
+          if (!customAddress.trim()) {
+              setIsOptimizing(false);
+              alert("Por favor, digite o endereço de partida.");
+              return;
+          }
+          fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(customAddress)}`)
+              .then(r => r.json())
+              .then(data => {
+                  if (data && data.length > 0) {
+                      processOptimization(parseFloat(data[0].lat), parseFloat(data[0].lon));
+                  } else {
+                      setIsOptimizing(false);
+                      alert("Tente ser mais específico no endereço (adicione a cidade, bairro, etc).");
+                  }
+              })
+              .catch(() => {
+                  setIsOptimizing(false);
+                  alert("Erro ao buscar as coordenadas deste endereço.");
+              });
+          return;
+      }
+
+      if (originMode === 'first_monitor') {
+          const first = devices.find(d => selectedDevices.includes(d.id) && d.latitude && d.longitude);
+          if (first) {
+              processOptimization(first.latitude, first.longitude);
+          } else {
+              setIsOptimizing(false);
+              alert("Nenhum monitor selecionado tem coordenadas válidas.");
+          }
+          return;
+      }
+
       if ("geolocation" in navigator) {
           navigator.geolocation.getCurrentPosition(
               (pos) => processOptimization(pos.coords.latitude, pos.coords.longitude),
               (err) => {
                  const first = devices.find(d => selectedDevices.includes(d.id) && d.latitude && d.longitude);
-                 if (first) processOptimization(first.latitude, first.longitude);
+                 if (first) {
+                     alert("Aviso de GPS: Não foi possível obter sua localização atual (sinal fraco ou permissão negada). A rota será gerada a partir do primeiro monitor selecionado.");
+                     processOptimization(first.latitude, first.longitude);
+                 }
                  else { setIsOptimizing(false); alert("GPS falhou e nenhum monitor tem coordenadas para ser origem."); }
               },
-              { timeout: 8000, enableHighAccuracy: true }
+              { timeout: 15000, enableHighAccuracy: true, maximumAge: 0 }
           );
       } else {
            const first = devices.find(d => selectedDevices.includes(d.id) && d.latitude && d.longitude);
@@ -91,9 +130,17 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
       }
   };
 
-  const openChunk = (chunk) => {
+  const openChunk = (chunk, i) => {
       const coords = chunk.map(d => `${d.latitude},${d.longitude}`).join('/');
-      window.open(`https://www.google.com/maps/dir/Current+Location/${coords}`, '_blank');
+      let url = `https://www.google.com/maps/dir/${coords}`;
+      if (i === 0) {
+          if (originMode === 'custom' && customAddress) {
+              url = `https://www.google.com/maps/dir/${encodeURIComponent(customAddress)}/${coords}`;
+          } else if (originMode === 'gps') {
+              url = `https://www.google.com/maps/dir/Current+Location/${coords}`;
+          }
+      }
+      window.open(url, '_blank');
   };
 
   const fetchDevices = () => {
@@ -202,16 +249,38 @@ const DeviceList = ({ refreshKey, onEdit, theme }) => {
            
            <div className="flex items-center gap-2 flex-wrap justify-center">
              {optimizedChunks.length === 0 ? (
-               <button onClick={handleOptimize} disabled={isOptimizing} className={`px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl shadow-lg transition-all flex items-center gap-2 text-xs sm:text-sm active:scale-95 ${isOptimizing ? 'opacity-70 cursor-not-allowed' : ''}`}>
-                 <Map size={18} className={isOptimizing ? "animate-pulse" : ""} /> 
-                 {isOptimizing ? "OTIMIZANDO..." : "OTIMIZAR ROTA"}
-               </button>
+               <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                 <select 
+                    value={originMode} 
+                    onChange={e => setOriginMode(e.target.value)}
+                    className={`p-2.5 rounded-xl border-2 text-xs sm:text-sm font-bold shadow-sm outline-none transition-all ${isDark ? 'bg-slate-800 border-slate-700 text-slate-200 focus:border-indigo-500' : 'bg-white border-gray-200 text-gray-700 focus:border-indigo-500'}`}
+                 >
+                    <option value="first_monitor">Partir do Monitor Selecionado</option>
+                    <option value="gps">Usar Local Atual (GPS)</option>
+                    <option value="custom">Digitar Endereço</option>
+                 </select>
+                 
+                 {originMode === 'custom' && (
+                    <input 
+                       type="text"
+                       placeholder="Ex: Rua Direita 100..."
+                       value={customAddress}
+                       onChange={e => setCustomAddress(e.target.value)}
+                       className={`p-2.5 rounded-xl border-2 text-xs sm:text-sm shadow-sm outline-none w-full sm:w-48 transition-all ${isDark ? 'bg-slate-800 border-slate-700 text-slate-200 focus:border-indigo-500' : 'bg-white border-gray-200 text-gray-700 focus:border-indigo-500'}`}
+                    />
+                 )}
+
+                 <button onClick={handleOptimize} disabled={isOptimizing} className={`px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl shadow-lg transition-all flex items-center gap-2 text-xs sm:text-sm active:scale-95 ${isOptimizing ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                   <Map size={18} className={isOptimizing ? "animate-pulse" : ""} /> 
+                   {isOptimizing ? "OTIMIZANDO..." : "OTIMIZAR"}
+                 </button>
+               </div>
              ) : (
                <>
                  <span className={`text-xs font-bold mr-2 hidden sm:inline ${isDark ? 'text-indigo-300' : 'text-indigo-600'}`}>Rota Inteligente:</span>
                  <div className="flex gap-2 flex-wrap justify-center">
                     {optimizedChunks.map((chunk, i) => (
-                      <button key={i} onClick={() => openChunk(chunk)} className="px-4 py-2 flex-1 sm:flex-none bg-green-600 hover:bg-green-700 text-white font-black rounded-lg shadow-md transition-all flex items-center justify-center gap-1.5 text-xs active:scale-95">
+                      <button key={i} onClick={() => openChunk(chunk, i)} className="px-4 py-2 flex-1 sm:flex-none bg-green-600 hover:bg-green-700 text-white font-black rounded-lg shadow-md transition-all flex items-center justify-center gap-1.5 text-xs active:scale-95">
                         <Map size={14} /> IR ROTA {i + 1}
                       </button>
                     ))}

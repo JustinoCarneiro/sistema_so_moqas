@@ -69,3 +69,13 @@ Thumbs.db
 *.swp
 *.swo
 /backups/
+
+# =========================
+# Mídia e Dados Sensíveis
+# =========================
+*.csv
+media/
+backend/media/
+uploads/
+*.xls
+*.xlsx

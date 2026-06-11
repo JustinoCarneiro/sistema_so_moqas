@@ -60,7 +60,7 @@ O projeto segue padrões de qualidade elevados com três camadas de testes:
 
 ### 🐳 Via Docker (Recomendado)
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 ### 🐍 Manual - Backend

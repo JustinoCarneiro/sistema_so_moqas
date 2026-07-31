@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: moqadb
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
     ports:
       - "5433:5432"
     volumes:
@@ -25,10 +25,11 @@ services:
     environment:
       - DB_NAME=moqadb
       - DB_USER=postgres
-      - DB_PASSWORD=password
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-password}
       - DB_HOST=db
       - DB_PORT=5432
-      - DEBUG=True
+      - DEBUG=${DEBUG:-False}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:-}
 
     depends_on:
       - db
@@ -52,7 +53,7 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_DB=moqadb
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
       - SCHEDULE=@weekly
       - BACKUP_KEEP_DAYS=30
     volumes:

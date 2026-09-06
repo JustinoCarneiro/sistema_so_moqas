@@ -79,3 +79,7 @@ backend/media/
 uploads/
 *.xls
 *.xlsx
+
+# ─── OndaDev ───
+.ondadev/handoff/current.md
+CLAUDE.local.md
